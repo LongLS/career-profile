@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Career Profile - List Jobs</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="career-screen">
+    <!-- HEADER -->
+    <header class="header">
+      <div class="header-logo">
+        <img src="assets/65191e22b6830509bad840faa59deeb559bdb3a9.svg" alt="Sotatek Logo" />
+      </div>
+      
+      <nav class="primary-nav">
+        <a href="#" class="nav-item active">List Jobs</a>
+        <a href="#" class="nav-item">Information</a>
+        <a href="#" class="nav-item">Benefits</a>
+      </nav>
+      
+      <div class="header-actions">
+        <div class="social-links">
+          <a href="#" class="social-icon facebook">
+            <img src="assets/e858df0c6571955afa2622f3febe95512a6f49a0.svg" alt="Facebook" />
+          </a>
+          <a href="#" class="social-icon telegram">
+            <img src="assets/64044b68fb4fbe9aa349a9afd2e0a1e0d90a16c0.svg" alt="Telegram" />
+          </a>
+          <a href="#" class="social-icon whatsapp">
+            <img src="assets/whatsapp.svg" alt="WhatsApp" />
+          </a>
+          <a href="#" class="social-icon instagram">
+            <img src="assets/a399628b33e6f6f1a875a654a2b152cf20bcef6f.svg" alt="Instagram" />
+          </a>
+        </div>
+        <button class="btn-primary">Contact Us</button>
+      </div>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section class="hero-section">
+      <div class="hero-content">
+        <div class="recruiter-intro">
+          <div class="recruiter-avatar">
+            <img src="assets/4af0074298f57b19e796f2e40d367a31d1aa785c.svg" alt="Ms. Nga Le" />
+          </div>
+          <div class="recruiter-info">
+            <h1>Ms. Nga Le</h1>
+            <p>
+              Recruitment Specialist<br>
+              <strong>5 years</strong> of experience in <strong>talent acquisition</strong><br>
+              Connecting talents with the right opportunities
+            </p>
+          </div>
+        </div>
+        
+        <div class="hero-search">
+          <div class="search-input-wrapper">
+            <div class="search-icon">
+              <img src="assets/672a02a5a2fb601b9ec6bb4411d91997465d477a.svg" alt="Search" />
+            </div>
+            <input type="text" class="search-input" placeholder="Job title..." />
+          </div>
+          <button class="btn-primary find-job-btn">Find Job</button>
+        </div>
+      </div>
+      
+      <div class="hero-visual">
+        <img class="hero-artwork-main" src="assets/Hero%20Section.svg" alt="Graphic artwork" />
+      </div>
+    </section>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+      
+      <!-- FILTER SIDEBAR -->
+      <aside class="filter-sidebar">
+        <div class="filter-group">
+          <h3>Locations</h3>
+          <div class="dropdown">
+            <span class="dropdown-text">All Locations</span>
+            <img src="assets/7a62725035b11b931adf7e1d17fd23fde6f47ac2.svg" alt="Chevron Down" class="chevron-icon" />
+          </div>
+        </div>
+
+        <div class="filter-divider"></div>
+
+        <div class="filter-group">
+          <h3>Job Level</h3>
+          <div class="checkbox-list">
+            <label class="checkbox-item"><input type="checkbox"><span class="checkbox-custom"></span> All Level</label>
+            <label class="checkbox-item"><input type="checkbox"><span class="checkbox-custom"></span> Fresher</label>
+            <label class="checkbox-item"><input type="checkbox"><span class="checkbox-custom"></span> Intern</label>
+            <label class="checkbox-item"><input type="checkbox"><span class="checkbox-custom"></span> Junior</label>
+            <label class="checkbox-item"><input type="checkbox"><span class="checkbox-custom"></span> Leader</label>
+            <label class="checkbox-item"><input type="checkbox"><span class="checkbox-custom"></span> Manager</label>
+            <label class="checkbox-item"><input type="checkbox"><span class="checkbox-custom"></span> Middle</label>
+            <label class="checkbox-item"><input type="checkbox"><span class="checkbox-custom"></span> Senior</label>
+          </div>
+        </div>
+
+        <div class="filter-divider"></div>
+
+        <div class="filter-group">
+          <h3>Job Category</h3>
+          <div class="checkbox-list">
+            <label class="checkbox-item"><input type="checkbox"><span class="checkbox-custom"></span> Back Office</label>
+            <label class="checkbox-item"><input type="checkbox"><span class="checkbox-custom"></span> Engineering & Technology</label>
+            <label class="checkbox-item"><input type="checkbox"><span class="checkbox-custom"></span> Operation Support</label>
+            <label class="checkbox-item"><input type="checkbox"><span class="checkbox-custom"></span> Sales & Marketing</label>
+          </div>
+        </div>
+      </aside>
+
+      <!-- JOBS GRID -->
+      <div class="jobs-grid">
+        <!-- Generates 10 job items as in design -->
+      </div>
+    </main>
+  </div>
+  <script>
+    // JS to append the 10 job items
+    const jobsGrid = document.querySelector('.jobs-grid');
+    const jobItemHTML = `
+      <div class="job-card">
+        <div class="job-header">
+          <div class="job-title-row">
+            <h2>Business Analyst (KR)</h2>
+            <span class="badge badge-outline">Senior</span>
+          </div>
+          <div class="job-salary-row">
+            <span class="badge badge-success">Full-Time</span>
+            <span class="salary-text">Salary: $20,000 - $25,000</span>
+          </div>
+        </div>
+        <div class="job-company">
+          <div class="company-logo">
+            <img src="assets/7b0da3ea4afe7c04031aa976eeebc9ce4e8c806a.svg" alt="Company Logo" />
+          </div>
+          <div class="company-info">
+            <p class="company-name">Engineering & Technology</p>
+            <div class="company-location">
+              <img src="assets/a6ec0b2ce9cd7a493539e40b94e2637caf20eb59.svg" alt="Pin" class="pin-icon" />
+              <span>Hanoi, Vietnam</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+    
+    let html = '';
+    for(let i=0; i<10; i++) { html += jobItemHTML; }
+    jobsGrid.innerHTML = html;
+  </script>
+</body>
+</html>

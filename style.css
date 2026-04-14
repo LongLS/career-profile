@@ -1,0 +1,446 @@
+:root {
+  --primary: #036ae5;
+  --text-dark: #101624;
+  --text-gray: #7e8494;
+  --border-color: #e5e7ef;
+  --positive: #47bd5f;
+  --positive-light: #e6f7e4;
+  --blue-hover: #0352b5;
+  --font-family: 'Be Vietnam Pro', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-family);
+  background: #ffffff;
+  color: var(--text-dark);
+}
+
+/* ==================== */
+/* HEADER               */
+/* ==================== */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 30px;
+  background: #ffffff;
+  box-shadow: 0px 4px 54px 0px rgba(0, 0, 0, 0.12);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header-logo {
+  flex: 1;
+}
+
+.header-logo img {
+  width: 109px;
+  height: 40px;
+  object-fit: contain;
+}
+
+.primary-nav {
+  display: flex;
+  gap: 32px;
+  justify-content: center;
+}
+
+.nav-item {
+  text-decoration: none;
+  font-size: 16px;
+  color: #3e4878;
+  font-weight: 600;
+  opacity: 0.4;
+  transition: opacity 0.2s;
+}
+
+.nav-item.active {
+  color: #172b8a;
+  font-weight: 700;
+  opacity: 1;
+}
+
+.header-actions {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 16px;
+}
+
+.social-links {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.social-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 12px;
+}
+
+.social-icon.facebook {
+  background: rgba(59, 87, 157, 0.05);
+  border: 1px solid rgba(59, 87, 157, 0.5);
+}
+.social-icon.facebook img { width: 20px; height: 20px; }
+
+.social-icon.telegram img {
+  width: 32px;
+  height: 32px;
+}
+
+.social-icon.whatsapp {
+  background: rgba(58, 205, 1, 0.05);
+  border: 1px solid rgba(58, 205, 1, 0.5);
+}
+.social-icon.whatsapp img { width: 20px; height: 20px; }
+
+.social-icon.instagram {
+  background: rgba(11, 105, 199, 0.05);
+  border: 1px solid rgba(11, 105, 199, 0.5);
+}
+.social-icon.instagram img { width: 22px; height: 22px; }
+
+.btn-primary {
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 44px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  box-shadow: 0px 1px 2px 0px rgba(8, 8, 8, 0.2), 0px 4px 4px 0px rgba(8, 8, 8, 0.08);
+  font-family: var(--font-family);
+  transition: background 0.2s;
+}
+.btn-primary:hover {
+  background: var(--blue-hover);
+}
+
+/* ==================== */
+/* HERO SECTION         */
+/* ==================== */
+.hero-section {
+  display: flex;
+  padding: 38.5px 100px;
+  background-image: 
+    linear-gradient(42.2269deg, rgba(3, 106, 229, 0) 54.027%, rgba(3, 106, 229, 0.7) 113.65%), 
+    linear-gradient(171.349deg, #acc1f7 0%, #ffffff 88.586%);
+  gap: 32px;
+  position: relative;
+  overflow: hidden;
+  align-items: center;
+}
+
+.hero-content {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  width: 594px;
+  z-index: 10;
+}
+
+.recruiter-intro {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.recruiter-avatar {
+  background: #fff;
+  width: 103px;
+  height: 103px;
+  border-radius: 112px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.recruiter-avatar img {
+  width: 43px;
+  height: 60px;
+}
+
+.recruiter-info h1 {
+  font-size: 26px;
+  color: #0e315a;
+  margin-bottom: 9px;
+  letter-spacing: -1px;
+}
+.recruiter-info p {
+  font-size: 16px;
+  color: #0e315a;
+  line-height:特1.31;
+}
+
+.hero-search {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(172, 197, 238, 0.6);
+  border-radius: 38px;
+  padding: 8px;
+  height: 62px;
+  backdrop-filter: blur(50px);
+}
+
+.search-input-wrapper {
+  background: #fff;
+  display: flex;
+  align-items: center;
+  padding: 8px 18px;
+  border-radius: 90px;
+  flex: 1;
+  gap: 8px;
+  height: 100%;
+}
+.search-icon img {
+  width: 22px;
+  height: 22px;
+}
+.search-input {
+  border: none;
+  font-size: 16px;
+  color: #8e98c1;
+  outline: none;
+  background: transparent;
+  font-family: var(--font-family);
+  width: 100%;
+}
+
+.find-job-btn {
+  padding: 12px 32px;
+  font-size: 16px;
+}
+
+.hero-visual {
+  position: absolute;
+  right: 100px;
+  top: 0;
+  width: 502px;
+  height: 100%;
+  pointer-events: none;
+  opacity: 0.8;
+}
+.hero-artwork-main {
+  position: absolute;
+  right: -50px; /* Slight adjustment based on standard Figma exports to align properly */
+  top: 0;
+  height: 100%;
+  object-fit: contain;
+  opacity: 1; /* Fully visible */
+}
+
+/* ==================== */
+/* MAIN CONTENT         */
+/* ==================== */
+.main-content {
+  display: flex;
+  gap: 24px;
+  padding: 0 100px;
+  margin: 30px auto 100px;
+  max-width: 1440px;
+}
+
+/* SIDEBAR */
+.filter-sidebar {
+  width: 286px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.filter-group h3 {
+  font-size: 16px;
+  color: var(--text-dark);
+}
+
+.dropdown {
+  background: #f6f7fc;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+}
+.dropdown-text {
+  font-size: 14px;
+}
+.chevron-icon {
+  width: 16px;
+  height: 16px;
+}
+
+.filter-divider {
+  height: 1px;
+  background: var(--border-color);
+  width: 100%;
+}
+
+.checkbox-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.checkbox-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  cursor: pointer;
+}
+.checkbox-item input {
+  display: none;
+}
+.checkbox-custom {
+  width: 20px;
+  height: 20px;
+  border: 1.5px solid #bdc0ce;
+  border-radius: 6px;
+  background: #fff;
+  display: inline-block;
+  position: relative;
+}
+.checkbox-item input:checked + .checkbox-custom {
+  background: var(--primary);
+  border-color: var(--primary);
+}
+.checkbox-item input:checked + .checkbox-custom::after {
+  content: "";
+  position: absolute;
+  left: 6px;
+  top: 2px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+/* JOBS GRID */
+.jobs-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  flex: 1;
+}
+
+.job-card {
+  background: #fff;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  height: 169px;
+  transition: box-shadow 0.2s;
+}
+.job-card:hover {
+  box-shadow: 0px 4px 20px rgba(0,0,0,0.05);
+}
+
+.job-header {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.job-title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.job-title-row h2 {
+  font-size: 18px;
+  color: #18191c;
+}
+
+.badge {
+  padding: 2px 8px;
+  border-radius: 3px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+.badge-outline {
+  border: 1px solid #565c69;
+  color: #565c69;
+}
+.badge-success {
+  background: var(--positive-light);
+  color: var(--positive);
+}
+
+.job-salary-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.salary-text {
+  font-size: 14px;
+  color: var(--text-gray);
+}
+
+.job-company {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.company-logo {
+  width: 48px;
+  height: 48px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-image: linear-gradient(51.14deg, #b4dbff 49.84%, rgba(180, 219, 255, 0) 150.9%);
+}
+.company-logo img {
+  width: 22px;
+  height: 30px;
+}
+
+.company-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.company-name {
+  font-size: 16px;
+  color: #18191c;
+}
+.company-location {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 14px;
+  color: var(--text-gray);
+}
+.pin-icon {
+  width: 14px;
+  height: 14px;
+}
