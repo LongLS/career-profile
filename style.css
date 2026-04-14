@@ -48,23 +48,36 @@ body {
 
 .primary-nav {
   display: flex;
-  gap: 32px;
+  gap: 4px;
   justify-content: center;
+  align-items: center;
 }
 
 .nav-item {
   text-decoration: none;
   font-size: 16px;
-  color: #3e4878;
+  color: #7e8494;
   font-weight: 600;
-  opacity: 0.4;
-  transition: opacity 0.2s;
+  padding: 6px 16px;
+  border-radius: 44px;
+  transition: background 0.2s, color 0.2s;
+  white-space: nowrap;
 }
 
 .nav-item.active {
+  background: #dce3f7;
   color: #172b8a;
   font-weight: 700;
   opacity: 1;
+}
+
+.nav-item:not(.active) {
+  opacity: 1;
+}
+
+.nav-item:not(.active):hover {
+  background: #f0f2fb;
+  color: #3e4878;
 }
 
 .header-actions {
