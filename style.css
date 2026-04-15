@@ -527,7 +527,7 @@ button { font-family: var(--font-family); cursor: pointer; }
   gap: 16px;
   background: var(--color-gray-4);
   border: none;
-  border-radius: 4px;
+  border-radius: 24px;
   padding: 8px 16px;
   font-size: 14px;
   font-weight: 600;
