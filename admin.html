@@ -37,7 +37,7 @@
     .admin-header {
       background: var(--white);
       border-bottom: 1px solid var(--gray-4);
-      padding: 0 24px;
+      padding: 0 32px;
       height: 60px;
       display: flex;
       align-items: center;
@@ -58,63 +58,31 @@
 
     /* ── Layout ── */
     .admin-body {
-      max-width: 960px;
-      margin: 32px auto;
-      padding: 0 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 24px;
+      max-width: 1200px;
+      margin: 28px auto;
+      padding: 0 24px;
     }
 
-    /* ── Card container ── */
+    /* ── Card ── */
     .card {
       background: var(--white);
       border: 1px solid var(--gray-4);
-      border-radius: 10px;
+      border-radius: 12px;
       padding: 24px;
     }
     .card-title {
       font-size: 16px;
       font-weight: 700;
-      margin-bottom: 20px;
       color: var(--dark);
       display: flex;
       align-items: center;
       justify-content: space-between;
+      margin-bottom: 20px;
     }
-
-    /* ── Form ── */
-    .form-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-    }
-    @media (max-width: 600px) { .form-grid { grid-template-columns: 1fr; } }
-
-    .form-group { display: flex; flex-direction: column; gap: 6px; }
-    .form-group.full { grid-column: 1 / -1; }
-
-    label { font-size: 13px; font-weight: 600; color: var(--gray-1); }
-
-    input, select {
-      height: 42px;
-      border: 1px solid var(--gray-3);
-      border-radius: 8px;
-      padding: 0 12px;
-      font-family: var(--font);
-      font-size: 14px;
-      color: var(--dark);
-      background: var(--white);
-      transition: border-color .2s;
-      outline: none;
-    }
-    input:focus, select:focus { border-color: var(--primary); }
-    input::placeholder { color: var(--gray-3); }
-
-    .form-actions {
+    .card-title-left {
       display: flex;
-      gap: 12px;
-      margin-top: 20px;
+      align-items: center;
+      gap: 10px;
     }
 
     /* ── Buttons ── */
@@ -133,24 +101,18 @@
       white-space: nowrap;
     }
     .btn:active { transform: scale(.97); }
-
-    .btn-primary { background: var(--primary); color: var(--white); }
+    .btn-primary   { background: var(--primary); color: var(--white); }
     .btn-primary:hover { background: var(--primary-hover); }
-
-    .btn-secondary {
-      background: var(--gray-5);
-      color: var(--gray-1);
-      border: 1px solid var(--gray-4);
-    }
+    .btn-secondary { background: var(--gray-5); color: var(--gray-1); border: 1px solid var(--gray-4); }
     .btn-secondary:hover { background: var(--gray-4); }
-
-    .btn-danger { background: var(--danger); color: var(--white); }
+    .btn-danger    { background: var(--danger); color: var(--white); }
     .btn-danger:hover { background: var(--danger-hover); }
-
     .btn-sm { padding: 6px 12px; font-size: 12px; border-radius: 6px; }
 
     /* ── Jobs table ── */
-    .jobs-table { width: 100%; border-collapse: collapse; }
+    .table-wrap { overflow-x: auto; }
+    .jobs-table { width: 100%; border-collapse: collapse; min-width: 700px; }
+
     .jobs-table th {
       text-align: left;
       font-size: 12px;
@@ -158,12 +120,13 @@
       color: var(--gray-2);
       text-transform: uppercase;
       letter-spacing: .5px;
-      padding: 8px 12px;
-      border-bottom: 1px solid var(--gray-4);
+      padding: 10px 12px;
+      border-bottom: 2px solid var(--gray-4);
       background: var(--gray-5);
+      white-space: nowrap;
     }
-    .jobs-table th:first-child { border-radius: 6px 0 0 6px; }
-    .jobs-table th:last-child  { border-radius: 0 6px 6px 0; }
+    .jobs-table th:first-child { border-radius: 8px 0 0 8px; }
+    .jobs-table th:last-child  { border-radius: 0 8px 8px 0; }
 
     .jobs-table td {
       padding: 14px 12px;
@@ -172,7 +135,7 @@
       vertical-align: middle;
     }
     .jobs-table tr:last-child td { border-bottom: none; }
-    .jobs-table tr:hover td { background: var(--gray-5); }
+    .jobs-table tbody tr:hover td { background: #fafbff; }
 
     /* ── Drag handle ── */
     .drag-handle {
@@ -182,13 +145,13 @@
       user-select: none;
     }
     .drag-handle:active { cursor: grabbing; }
+    .drag-handle:hover { color: var(--gray-2); }
     .drag-handle svg { display: block; }
-
-    .td-stt { color: var(--gray-2); font-weight: 600; min-width: 36px; }
-
-    .sortable-ghost td { background: #eef3fd !important; opacity: .6; }
+    .td-stt { color: var(--gray-2); font-weight: 600; }
+    .sortable-ghost td  { background: #eef3fd !important; opacity: .55; }
     .sortable-chosen td { background: #f0f4ff !important; }
 
+    /* ── Badges ── */
     .badge {
       display: inline-flex;
       align-items: center;
@@ -204,6 +167,116 @@
     .badge-warning { background: #fff8e7; color: #f9b217; }
 
     .td-actions { display: flex; gap: 8px; }
+
+    /* ── Empty / Loading ── */
+    .state-msg {
+      text-align: center;
+      padding: 48px 0;
+      color: var(--gray-2);
+      font-size: 14px;
+    }
+
+    /* ── Form Modal ── */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.45);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    .modal-overlay.open { display: flex; }
+
+    .modal {
+      background: var(--white);
+      border-radius: 14px;
+      width: 100%;
+      max-width: 560px;
+      max-height: 90dvh;
+      overflow-y: auto;
+      box-shadow: 0 12px 48px rgba(0,0,0,.18);
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 24px 16px;
+      border-bottom: 1px solid var(--gray-4);
+      position: sticky;
+      top: 0;
+      background: var(--white);
+      border-radius: 14px 14px 0 0;
+      z-index: 1;
+    }
+    .modal-header h3 { font-size: 17px; font-weight: 700; color: var(--dark); }
+    .modal-close {
+      width: 30px; height: 30px;
+      border: none;
+      background: var(--gray-5);
+      border-radius: 8px;
+      font-size: 16px;
+      color: var(--gray-1);
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background .2s;
+    }
+    .modal-close:hover { background: var(--gray-4); }
+
+    .modal-body { padding: 24px; }
+
+    .modal-footer {
+      padding: 16px 24px 20px;
+      display: flex;
+      gap: 12px;
+      justify-content: flex-end;
+      border-top: 1px solid var(--gray-4);
+      background: var(--gray-5);
+      border-radius: 0 0 14px 14px;
+    }
+
+    /* ── Form ── */
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    @media (max-width: 500px) { .form-grid { grid-template-columns: 1fr; } }
+
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    .form-group.full { grid-column: 1 / -1; }
+
+    label { font-size: 13px; font-weight: 600; color: var(--gray-1); }
+
+    input, select {
+      height: 42px;
+      border: 1px solid var(--gray-3);
+      border-radius: 8px;
+      padding: 0 12px;
+      font-family: var(--font);
+      font-size: 14px;
+      color: var(--dark);
+      background: var(--white);
+      transition: border-color .2s;
+      outline: none;
+    }
+    input:focus, select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(3,106,229,.08); }
+    input::placeholder { color: var(--gray-3); }
+
+    /* ── Delete confirm modal ── */
+    .confirm-modal {
+      background: var(--white);
+      border-radius: 12px;
+      padding: 28px 24px;
+      max-width: 400px;
+      width: 90%;
+      text-align: center;
+    }
+    .confirm-modal h3 { font-size: 17px; font-weight: 700; margin-bottom: 8px; }
+    .confirm-modal p  { font-size: 14px; color: var(--gray-2); margin-bottom: 24px; }
+    .confirm-actions  { display: flex; gap: 12px; justify-content: center; }
 
     /* ── Toast ── */
     .toast {
@@ -223,40 +296,9 @@
       z-index: 999;
       pointer-events: none;
     }
-    .toast.show { opacity: 1; transform: translateY(0); }
+    .toast.show    { opacity: 1; transform: translateY(0); }
     .toast.success { background: var(--success); }
     .toast.error   { background: var(--danger); }
-
-    /* ── Empty / Loading state ── */
-    .state-msg {
-      text-align: center;
-      padding: 40px 0;
-      color: var(--gray-2);
-      font-size: 14px;
-    }
-
-    /* ── Modal confirm ── */
-    .modal-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,.45);
-      z-index: 200;
-      align-items: center;
-      justify-content: center;
-    }
-    .modal-overlay.open { display: flex; }
-    .modal {
-      background: var(--white);
-      border-radius: 12px;
-      padding: 28px 24px;
-      max-width: 400px;
-      width: 90%;
-      text-align: center;
-    }
-    .modal h3 { font-size: 17px; font-weight: 700; margin-bottom: 8px; }
-    .modal p  { font-size: 14px; color: var(--gray-2); margin-bottom: 24px; }
-    .modal-actions { display: flex; gap: 12px; justify-content: center; }
   </style>
 </head>
 <body>
@@ -268,104 +310,109 @@
   </header>
 
   <div class="admin-body">
-
-    <!-- ===== FORM THÊM / SỬA ===== -->
-    <div class="card" id="form-card">
-      <div class="card-title">
-        <span id="form-title">Thêm việc làm mới</span>
-        <button class="btn btn-secondary btn-sm" id="btn-cancel" style="display:none">Huỷ</button>
-      </div>
-
-      <form id="job-form" autocomplete="off">
-        <input type="hidden" id="edit-id" />
-        <div class="form-grid">
-
-          <div class="form-group full">
-            <label for="f-title">Tên vị trí *</label>
-            <input type="text" id="f-title" placeholder="VD: Business Analyst (KR)" required />
-          </div>
-
-          <div class="form-group">
-            <label for="f-level">Cấp độ *</label>
-            <select id="f-level" required>
-              <option value="">-- Chọn --</option>
-              <option>Intern</option>
-              <option>Fresher</option>
-              <option>Junior</option>
-              <option>Middle</option>
-              <option>Senior</option>
-              <option>Leader</option>
-              <option>Manager</option>
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label for="f-type">Hình thức *</label>
-            <select id="f-type" required>
-              <option value="">-- Chọn --</option>
-              <option>Full-Time</option>
-              <option>Part-Time</option>
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label for="f-salary">Mức lương *</label>
-            <input type="text" id="f-salary" placeholder="VD: $1,000 - $2,000" required />
-          </div>
-
-          <div class="form-group">
-            <label for="f-company">Phòng ban / Công ty *</label>
-            <select id="f-company" required>
-              <option value="">-- Chọn phòng ban --</option>
-              <option>Back Office</option>
-              <option>Engineering &amp; Technology</option>
-              <option>Operation Support</option>
-              <option>Sales &amp; Marketing</option>
-            </select>
-          </div>
-
-          <div class="form-group full">
-            <label for="f-location">Địa điểm *</label>
-            <select id="f-location" required>
-              <option value="">-- Chọn địa điểm --</option>
-              <option>Hanoi, Vietnam</option>
-              <option>Danang, Vietnam</option>
-              <option>Hochiminh, Vietnam</option>
-            </select>
-          </div>
-
-        </div>
-
-        <div class="form-actions">
-          <button type="submit" class="btn btn-primary" id="btn-submit">
-            + Thêm việc làm
-          </button>
-        </div>
-      </form>
-    </div>
-
-    <!-- ===== DANH SÁCH VIỆC LÀM ===== -->
     <div class="card">
       <div class="card-title">
-        Danh sách việc làm
-        <span id="jobs-count" style="font-size:13px;font-weight:400;color:var(--gray-2)"></span>
+        <div class="card-title-left">
+          <span>Danh sách việc làm</span>
+          <span id="jobs-count" style="font-size:13px;font-weight:400;color:var(--gray-2)"></span>
+        </div>
+        <button class="btn btn-primary" id="btn-open-form">
+          + Thêm việc làm
+        </button>
       </div>
 
-      <div id="table-wrap">
+      <div class="table-wrap" id="table-wrap">
         <p class="state-msg">Đang tải...</p>
       </div>
     </div>
-
   </div>
 
-  <!-- Modal xác nhận xoá -->
-  <div class="modal-overlay" id="delete-modal">
+  <!-- ===== FORM MODAL ===== -->
+  <div class="modal-overlay" id="form-modal">
     <div class="modal">
+      <div class="modal-header">
+        <h3 id="form-title">Thêm việc làm mới</h3>
+        <button class="modal-close" id="btn-modal-close">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <form id="job-form" autocomplete="off">
+          <input type="hidden" id="edit-id" />
+          <div class="form-grid">
+
+            <div class="form-group full">
+              <label for="f-title">Tên vị trí *</label>
+              <input type="text" id="f-title" placeholder="VD: Business Analyst (KR)" required />
+            </div>
+
+            <div class="form-group">
+              <label for="f-level">Cấp độ *</label>
+              <select id="f-level" required>
+                <option value="">-- Chọn --</option>
+                <option>Intern</option>
+                <option>Fresher</option>
+                <option>Junior</option>
+                <option>Middle</option>
+                <option>Senior</option>
+                <option>Leader</option>
+                <option>Manager</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="f-type">Hình thức *</label>
+              <select id="f-type" required>
+                <option value="">-- Chọn --</option>
+                <option>Full-Time</option>
+                <option>Part-Time</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="f-salary">Mức lương *</label>
+              <input type="text" id="f-salary" placeholder="VD: $1,000 - $2,000" required />
+            </div>
+
+            <div class="form-group">
+              <label for="f-company">Phòng ban *</label>
+              <select id="f-company" required>
+                <option value="">-- Chọn phòng ban --</option>
+                <option>Back Office</option>
+                <option>Engineering &amp; Technology</option>
+                <option>Operation Support</option>
+                <option>Sales &amp; Marketing</option>
+              </select>
+            </div>
+
+            <div class="form-group full">
+              <label for="f-location">Địa điểm *</label>
+              <select id="f-location" required>
+                <option value="">-- Chọn địa điểm --</option>
+                <option>Hanoi, Vietnam</option>
+                <option>Danang, Vietnam</option>
+                <option>Hochiminh, Vietnam</option>
+              </select>
+            </div>
+
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="btn-cancel">Huỷ</button>
+        <button class="btn btn-primary" id="btn-submit">+ Thêm việc làm</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== DELETE CONFIRM MODAL ===== -->
+  <div class="modal-overlay" id="delete-modal">
+    <div class="confirm-modal">
       <h3>Xác nhận xoá</h3>
-      <p>Bạn có chắc muốn xoá vị trí này không? Hành động này không thể hoàn tác.</p>
-      <div class="modal-actions">
+      <p id="delete-msg">Bạn có chắc muốn xoá vị trí này không?</p>
+      <div class="confirm-actions">
         <button class="btn btn-secondary" id="modal-cancel">Huỷ</button>
-        <button class="btn btn-danger" id="modal-confirm">Xoá</button>
+        <button class="btn btn-danger"    id="modal-confirm">Xoá</button>
       </div>
     </div>
   </div>
@@ -400,7 +447,7 @@
       document.getElementById('jobs-count').textContent = `(${docs.length} việc làm)`;
 
       if (!docs.length) {
-        wrap.innerHTML = '<p class="state-msg">Chưa có việc làm nào. Thêm mới ở form trên.</p>';
+        wrap.innerHTML = '<p class="state-msg">Chưa có việc làm nào. Nhấn "+ Thêm việc làm" để bắt đầu.</p>';
         return;
       }
 
@@ -436,15 +483,19 @@
           <thead>
             <tr>
               <th style="width:36px"></th>
-              <th style="width:48px">STT</th>
-              <th>Vị trí</th><th>Cấp</th><th>Hình thức</th>
-              <th>Lương</th><th>Phòng ban</th><th>Địa điểm</th><th>Thao tác</th>
+              <th style="width:52px">STT</th>
+              <th>Vị trí</th>
+              <th>Cấp</th>
+              <th>Hình thức</th>
+              <th>Lương</th>
+              <th>Phòng ban</th>
+              <th>Địa điểm</th>
+              <th>Thao tác</th>
             </tr>
           </thead>
           <tbody id="jobs-tbody">${rows}</tbody>
         </table>`;
 
-      // Init SortableJS on tbody
       if (sortableInstance) sortableInstance.destroy();
       sortableInstance = Sortable.create(document.getElementById('jobs-tbody'), {
         handle: '.drag-handle',
@@ -473,29 +524,42 @@
       }
       allDocs = data;
       renderTable(data);
-      console.log('[Supabase] Loaded', data.length, 'jobs');
     }
 
-    /* ── Handle drag-and-drop reorder ── */
+    /* ── Test connection ── */
+    async function testConnection() {
+      const { data, error } = await db.from('jobs').select('count').limit(1);
+      if (error) {
+        document.getElementById('table-wrap').innerHTML =
+          `<p class="state-msg" style="color:#e53935">
+            ❌ Lỗi kết nối Supabase<br>
+            <strong>${error.code}</strong>: ${error.message}
+          </p>`;
+      } else {
+        loadJobs();
+      }
+    }
+    testConnection();
+
+    /* ── Real-time ── */
+    db.channel('admin-jobs')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'jobs' },
+        () => { if (!isReordering) loadJobs(); })
+      .subscribe();
+
+    /* ── Handle reorder ── */
     async function handleReorder() {
       const tbody = document.getElementById('jobs-tbody');
       if (!tbody) return;
-
       const rows = [...tbody.querySelectorAll('tr[data-id]')];
+      rows.forEach((row, i) => { row.querySelector('.td-stt').textContent = i + 1; });
 
-      // Update STT numbers visually
-      rows.forEach((row, i) => {
-        row.querySelector('.td-stt').textContent = i + 1;
-      });
-
-      // Persist new order to Supabase
       isReordering = true;
       try {
         await Promise.all(rows.map((row, i) =>
           db.from('jobs').update({ display_order: i + 1 }).eq('id', row.dataset.id)
         ));
         showToast('Đã cập nhật thứ tự hiển thị!');
-        // Update local allDocs order to match
         allDocs = rows.map(row => allDocs.find(d => d.id === row.dataset.id));
       } catch (err) {
         showToast('Lỗi khi cập nhật thứ tự', 'error');
@@ -505,39 +569,36 @@
       }
     }
 
-    /* ── Test kết nối khi load ── */
-    async function testConnection() {
-      const { data, error } = await db.from('jobs').select('count').limit(1);
-      if (error) {
-        console.error('[Supabase] Lỗi kết nối:', error.code, error.message, error.details, error.hint);
-        document.getElementById('table-wrap').innerHTML =
-          `<p class="state-msg" style="color:#e53935">
-            ❌ Lỗi kết nối Supabase<br>
-            <strong>${error.code}</strong>: ${error.message}<br>
-            <small>${error.hint || error.details || ''}</small>
-          </p>`;
-      } else {
-        console.log('[Supabase] Kết nối OK');
-        loadJobs();
-      }
+    /* ── Form modal ── */
+    const formModal  = document.getElementById('form-modal');
+    const formTitle  = document.getElementById('form-title');
+    const btnSubmit  = document.getElementById('btn-submit');
+    const editIdEl   = document.getElementById('edit-id');
+
+    function openFormModal(isEdit = false) {
+      formTitle.textContent = isEdit ? 'Chỉnh sửa việc làm' : 'Thêm việc làm mới';
+      btnSubmit.textContent = isEdit ? 'Lưu thay đổi' : '+ Thêm việc làm';
+      formModal.classList.add('open');
+      document.body.style.overflow = 'hidden';
     }
 
-    testConnection();
+    function closeFormModal() {
+      formModal.classList.remove('open');
+      document.body.style.overflow = '';
+      resetForm();
+    }
 
-    /* ── Real-time ── */
-    db.channel('admin-jobs')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'jobs' },
-        () => { if (!isReordering) loadJobs(); })
-      .subscribe();
+    document.getElementById('btn-open-form').addEventListener('click', () => openFormModal(false));
+    document.getElementById('btn-modal-close').addEventListener('click', closeFormModal);
+    document.getElementById('btn-cancel').addEventListener('click', closeFormModal);
 
-    /* ── Form submit (thêm + sửa) ── */
-    const form      = document.getElementById('job-form');
-    const editIdEl  = document.getElementById('edit-id');
-    const btnSubmit = document.getElementById('btn-submit');
-    const btnCancel = document.getElementById('btn-cancel');
-    const formTitle = document.getElementById('form-title');
+    // Close on overlay click
+    formModal.addEventListener('click', (e) => {
+      if (e.target === formModal) closeFormModal();
+    });
 
-    form.addEventListener('submit', async e => {
+    /* ── Form submit ── */
+    document.getElementById('job-form').addEventListener('submit', async e => {
       e.preventDefault();
       btnSubmit.disabled = true;
       btnSubmit.textContent = 'Đang lưu...';
@@ -558,17 +619,18 @@
           if (error) throw error;
           showToast('Cập nhật thành công!');
         } else {
-          const { error } = await db.from('jobs').insert(data);
+          const maxOrder = allDocs.length ? Math.max(...allDocs.map(d => d.display_order || 0)) : 0;
+          const { error } = await db.from('jobs').insert({ ...data, display_order: maxOrder + 1 });
           if (error) throw error;
           showToast('Thêm việc làm thành công!');
         }
-        resetForm();
+        closeFormModal();
         loadJobs();
       } catch (err) {
         console.error(err);
         showToast('Lỗi: ' + err.message, 'error');
-      } finally {
         btnSubmit.disabled = false;
+        btnSubmit.textContent = editIdEl.value ? 'Lưu thay đổi' : '+ Thêm việc làm';
       }
     });
 
@@ -576,7 +638,6 @@
     function startEdit(id) {
       const j = allDocs.find(d => d.id === id);
       if (!j) return;
-
       editIdEl.value = id;
       document.getElementById('f-title').value    = j.title;
       document.getElementById('f-level').value    = j.level;
@@ -584,38 +645,29 @@
       document.getElementById('f-salary').value   = j.salary;
       document.getElementById('f-company').value  = j.company;
       document.getElementById('f-location').value = j.location;
-
-      formTitle.textContent      = 'Chỉnh sửa việc làm';
-      btnSubmit.textContent      = 'Lưu thay đổi';
-      btnCancel.style.display    = 'inline-flex';
-      document.getElementById('form-card').scrollIntoView({ behavior: 'smooth' });
+      openFormModal(true);
     }
 
-    btnCancel.addEventListener('click', resetForm);
-
     function resetForm() {
-      form.reset();
-      editIdEl.value             = '';
-      formTitle.textContent      = 'Thêm việc làm mới';
-      btnSubmit.textContent      = '+ Thêm việc làm';
-      btnSubmit.disabled         = false;
-      btnCancel.style.display    = 'none';
+      document.getElementById('job-form').reset();
+      editIdEl.value         = '';
+      btnSubmit.disabled     = false;
     }
 
     /* ── Delete ── */
     let pendingDeleteId = '';
-    const modal        = document.getElementById('delete-modal');
+    const deleteModal   = document.getElementById('delete-modal');
 
     function askDelete(id, title) {
       pendingDeleteId = id;
-      modal.querySelector('p').textContent =
+      document.getElementById('delete-msg').textContent =
         `Bạn có chắc muốn xoá vị trí "${title}"? Hành động này không thể hoàn tác.`;
-      modal.classList.add('open');
+      deleteModal.classList.add('open');
     }
 
-    document.getElementById('modal-cancel').addEventListener('click',  () => modal.classList.remove('open'));
+    document.getElementById('modal-cancel').addEventListener('click',  () => deleteModal.classList.remove('open'));
     document.getElementById('modal-confirm').addEventListener('click', async () => {
-      modal.classList.remove('open');
+      deleteModal.classList.remove('open');
       const { error } = await db.from('jobs').delete().eq('id', pendingDeleteId);
       if (error) {
         showToast('Lỗi khi xoá: ' + error.message, 'error');
