@@ -102,8 +102,14 @@
           <div class="filter-modal-group">
             <h3 class="filter-modal-label">Locations</h3>
             <div class="filter-modal-dropdown" id="modal-location-dropdown">
-              <span class="dropdown-text">All Locations</span>
+              <span class="dropdown-text" id="modal-location-text">All Locations</span>
               <img src="assets/7a62725035b11b931adf7e1d17fd23fde6f47ac2.svg" alt="Chevron Down" class="chevron-icon" />
+              <div class="dropdown-options" id="modal-location-options">
+                <div class="dropdown-option active" data-value="">All Locations</div>
+                <div class="dropdown-option" data-value="hanoi">Hanoi</div>
+                <div class="dropdown-option" data-value="danang">Danang</div>
+                <div class="dropdown-option" data-value="hochiminh">Hochiminh</div>
+              </div>
             </div>
           </div>
 
@@ -150,7 +156,7 @@
             <div class="search-icon-wrap">
               <img src="assets/672a02a5a2fb601b9ec6bb4411d91997465d477a.svg" alt="Search" />
             </div>
-            <input type="text" class="search-input" placeholder="Enter type of job" />
+            <input type="text" class="search-input" id="mobile-search-input" placeholder="Enter type of job" />
           </div>
           <button class="filter-search-btn" id="filter-toggle-btn">
             Filter Search
@@ -181,8 +187,14 @@
           <div class="filter-group">
             <h3 class="filter-title">Locations</h3>
             <div class="dropdown" id="location-dropdown">
-              <span class="dropdown-text">All Locations</span>
+              <span class="dropdown-text" id="location-text">All Locations</span>
               <img src="assets/7a62725035b11b931adf7e1d17fd23fde6f47ac2.svg" alt="Chevron Down" class="chevron-icon" />
+              <div class="dropdown-options" id="location-options">
+                <div class="dropdown-option active" data-value="">All Locations</div>
+                <div class="dropdown-option" data-value="hanoi">Hanoi</div>
+                <div class="dropdown-option" data-value="danang">Danang</div>
+                <div class="dropdown-option" data-value="hochiminh">Hochiminh</div>
+              </div>
             </div>
           </div>
 
@@ -251,9 +263,146 @@
         </div>`;
     }
 
-    /* ---- Load jobs from Supabase ---- */
+    /* ---- Job data & filter state ---- */
     const grid = document.getElementById('jobs-grid');
+    let allJobs = [];
+    let selectedLevels   = new Set(); // empty = show all
+    let selectedLocation = '';        // empty = show all
+    let searchQuery      = '';        // empty = show all
 
+    /* ---- Render filtered jobs ---- */
+    function applyFilters() {
+      let jobs = allJobs;
+
+      // Filter by search query (title + company)
+      if (searchQuery) {
+        jobs = jobs.filter(job =>
+          (job.title   || '').toLowerCase().includes(searchQuery) ||
+          (job.company || '').toLowerCase().includes(searchQuery)
+        );
+      }
+
+      // Filter by location
+      if (selectedLocation) {
+        jobs = jobs.filter(job =>
+          (job.location || '').toLowerCase().includes(selectedLocation)
+        );
+      }
+
+      // Filter by level
+      const hasLevelFilter = selectedLevels.size > 0 && !selectedLevels.has('all');
+      if (hasLevelFilter) {
+        jobs = jobs.filter(job => selectedLevels.has((job.level || '').toLowerCase()));
+      }
+
+      if (!jobs.length) {
+        grid.innerHTML = '<p style="color:#7e8494;padding:24px 0">Không có việc làm phù hợp.</p>';
+        return;
+      }
+      grid.innerHTML = jobs.map((job, i) => jobCardHTML(job, i)).join('');
+    }
+
+    /* ---- Sync checkboxes between sidebar & modal ---- */
+    function syncCheckboxes() {
+      ['level', 'modal-level'].forEach(name => {
+        document.querySelectorAll(`input[name="${name}"]`).forEach(cb => {
+          if (selectedLevels.has('all')) {
+            cb.checked = cb.value === 'all';
+          } else {
+            cb.checked = selectedLevels.has(cb.value);
+          }
+        });
+      });
+    }
+
+    /* ---- Handle level checkbox change ---- */
+    function handleLevelChange(value, checked) {
+      if (value === 'all') {
+        selectedLevels.clear();
+        if (checked) selectedLevels.add('all');
+      } else {
+        selectedLevels.delete('all');
+        if (checked) selectedLevels.add(value);
+        else selectedLevels.delete(value);
+      }
+      syncCheckboxes();
+      applyFilters();
+    }
+
+    /* ---- Attach listeners for both sidebar & modal checkboxes ---- */
+    document.querySelectorAll('input[name="level"], input[name="modal-level"]').forEach(cb => {
+      cb.addEventListener('change', () => handleLevelChange(cb.value, cb.checked));
+    });
+
+    /* ---- Location dropdown logic ---- */
+    const LOCATION_LABELS = { '': 'All Locations', hanoi: 'Hanoi', danang: 'Danang', hochiminh: 'Hochiminh' };
+
+    function setLocation(value) {
+      selectedLocation = value;
+
+      // Update text + active class for both dropdowns
+      [
+        { text: 'location-text',       options: 'location-options' },
+        { text: 'modal-location-text', options: 'modal-location-options' },
+      ].forEach(({ text, options }) => {
+        const textEl = document.getElementById(text);
+        if (textEl) textEl.textContent = LOCATION_LABELS[value];
+        document.querySelectorAll(`#${options} .dropdown-option`).forEach(opt => {
+          opt.classList.toggle('active', opt.dataset.value === value);
+        });
+      });
+
+      applyFilters();
+    }
+
+    function setupLocationDropdown(toggleId, optionsId) {
+      const toggle  = document.getElementById(toggleId);
+      const options = document.getElementById(optionsId);
+      if (!toggle || !options) return;
+
+      toggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        // Close other open dropdowns first
+        document.querySelectorAll('.dropdown-options.open').forEach(el => {
+          if (el !== options) el.classList.remove('open');
+        });
+        options.classList.toggle('open');
+      });
+
+      options.querySelectorAll('.dropdown-option').forEach(opt => {
+        opt.addEventListener('click', (e) => {
+          e.stopPropagation();
+          setLocation(opt.dataset.value);
+          options.classList.remove('open');
+        });
+      });
+    }
+
+    setupLocationDropdown('location-dropdown',       'location-options');
+    setupLocationDropdown('modal-location-dropdown', 'modal-location-options');
+
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', () => {
+      document.querySelectorAll('.dropdown-options.open').forEach(el => el.classList.remove('open'));
+    });
+
+    /* ---- Search input logic ---- */
+    function handleSearch(value) {
+      searchQuery = value.trim().toLowerCase();
+      // Sync both inputs
+      ['search-job-input', 'mobile-search-input'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el && el.value.toLowerCase() !== searchQuery) el.value = value;
+      });
+      applyFilters();
+    }
+
+    ['search-job-input', 'mobile-search-input'].forEach(id => {
+      const el = document.getElementById(id);
+      el?.addEventListener('input', () => handleSearch(el.value));
+    });
+
+    /* ---- Load jobs from Supabase ---- */
     async function loadJobs() {
       grid.innerHTML = '<p style="color:#7e8494;padding:24px 0">Đang tải dữ liệu...</p>';
       const { data, error } = await db
@@ -274,7 +423,8 @@
         return;
       }
 
-      grid.innerHTML = data.map((job, i) => jobCardHTML(job, i)).join('');
+      allJobs = data;
+      applyFilters();
       console.log('[Supabase] Loaded', data.length, 'jobs');
     }
 
