@@ -85,6 +85,62 @@
       </div>
     </section>
 
+    <!-- ===== FILTER MODAL (mobile popup) ===== -->
+    <div class="filter-modal-overlay" id="filter-modal-overlay">
+      <div class="filter-modal" id="filter-modal">
+        <div class="filter-modal-header">
+          <h2 class="filter-modal-title">Filter Search</h2>
+          <button class="filter-modal-close" id="filter-modal-close" aria-label="Close filter">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path d="M15 5L5 15M5 5l10 10" stroke="#101624" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+
+        <div class="filter-modal-body">
+          <!-- Locations -->
+          <div class="filter-modal-group">
+            <h3 class="filter-modal-label">Locations</h3>
+            <div class="filter-modal-dropdown" id="modal-location-dropdown">
+              <span class="dropdown-text">All Locations</span>
+              <img src="assets/7a62725035b11b931adf7e1d17fd23fde6f47ac2.svg" alt="Chevron Down" class="chevron-icon" />
+            </div>
+          </div>
+
+          <!-- Job Level -->
+          <div class="filter-modal-group">
+            <h3 class="filter-modal-label">Job Level</h3>
+            <div class="checkbox-list">
+              <label class="checkbox-item"><input type="checkbox" name="modal-level" value="all"><span class="checkbox-custom"></span>All Level</label>
+              <label class="checkbox-item"><input type="checkbox" name="modal-level" value="fresher"><span class="checkbox-custom"></span>Fresher</label>
+              <label class="checkbox-item"><input type="checkbox" name="modal-level" value="intern"><span class="checkbox-custom"></span>Intern</label>
+              <label class="checkbox-item"><input type="checkbox" name="modal-level" value="junior"><span class="checkbox-custom"></span>Junior</label>
+              <label class="checkbox-item"><input type="checkbox" name="modal-level" value="leader"><span class="checkbox-custom"></span>Leader</label>
+              <label class="checkbox-item"><input type="checkbox" name="modal-level" value="manager"><span class="checkbox-custom"></span>Manager</label>
+              <label class="checkbox-item"><input type="checkbox" name="modal-level" value="middle"><span class="checkbox-custom"></span>Middle</label>
+              <label class="checkbox-item"><input type="checkbox" name="modal-level" value="senior"><span class="checkbox-custom"></span>Senior</label>
+            </div>
+          </div>
+
+          <!-- Job Category -->
+          <div class="filter-modal-group">
+            <h3 class="filter-modal-label">Job Category</h3>
+            <div class="checkbox-list">
+              <label class="checkbox-item"><input type="checkbox" name="modal-category" value="back-office"><span class="checkbox-custom"></span>Back Office</label>
+              <label class="checkbox-item"><input type="checkbox" name="modal-category" value="engineering"><span class="checkbox-custom"></span>Engineering &amp; Technology</label>
+              <label class="checkbox-item"><input type="checkbox" name="modal-category" value="operation"><span class="checkbox-custom"></span>Operation Support</label>
+              <label class="checkbox-item"><input type="checkbox" name="modal-category" value="sales"><span class="checkbox-custom"></span>Sales &amp; Marketing</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="filter-modal-footer">
+          <button class="filter-modal-btn filter-modal-cancel" id="filter-modal-cancel">Cancel</button>
+          <button class="filter-modal-btn filter-modal-submit" id="filter-modal-submit">Submit</button>
+        </div>
+      </div>
+    </div>
+
     <!-- ===== JOBS SECTION ===== -->
     <section class="jobs-section">
       <div class="container">
@@ -248,13 +304,25 @@
       item.addEventListener('click', () => toggleMenu(false));
     });
 
-    /* ---- Filter sidebar (mobile) ---- */
-    const filterToggle  = document.getElementById('filter-toggle-btn');
-    const filterSidebar = document.getElementById('filter-sidebar');
-    const sidebarClose  = document.getElementById('sidebar-close');
+    /* ---- Filter modal (mobile) ---- */
+    const filterToggle    = document.getElementById('filter-toggle-btn');
+    const filterModalOverlay = document.getElementById('filter-modal-overlay');
+    const filterModalClose   = document.getElementById('filter-modal-close');
+    const filterModalCancel  = document.getElementById('filter-modal-cancel');
+    const filterModalSubmit  = document.getElementById('filter-modal-submit');
 
-    filterToggle?.addEventListener('click', () => filterSidebar.classList.add('open'));
-    sidebarClose?.addEventListener('click', () => filterSidebar.classList.remove('open'));
+    function openFilterModal()  { filterModalOverlay.classList.add('open'); document.body.style.overflow = 'hidden'; }
+    function closeFilterModal() { filterModalOverlay.classList.remove('open'); document.body.style.overflow = ''; }
+
+    filterToggle?.addEventListener('click', openFilterModal);
+    filterModalClose?.addEventListener('click', closeFilterModal);
+    filterModalCancel?.addEventListener('click', closeFilterModal);
+    filterModalSubmit?.addEventListener('click', closeFilterModal);
+
+    /* Close when clicking the dark overlay (outside modal card) */
+    filterModalOverlay?.addEventListener('click', (e) => {
+      if (e.target === filterModalOverlay) closeFilterModal();
+    });
   </script>
 </body>
 </html>
