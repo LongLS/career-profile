@@ -57,7 +57,7 @@ button { font-family: var(--font-family); cursor: pointer; }
   width: 100%;
   max-width: 1240px;
   margin: 0 auto;
-  padding: 0 20px; /* Base padding for smaller screens */
+  padding: 0 16px; /* 16px padding for tablet/mobile as per Figma 744px */
 }
 
 @media (min-width: 1280px) {
@@ -239,8 +239,8 @@ button { font-family: var(--font-family); cursor: pointer; }
   position: relative;
   overflow: hidden;
   width: 100%;
-  min-height: 274px; 
-  background-color: var(--white);
+  height: 202px;
+  background: url('assets/Hero Section.svg') center/cover no-repeat;
   display: flex;
   align-items: center;
 }
@@ -250,7 +250,7 @@ button { font-family: var(--font-family); cursor: pointer; }
   z-index: 10;
   display: flex;
   align-items: center;
-  min-height: 274px;
+  height: 202px;
 }
 
 /* Recruiter intro */
@@ -331,21 +331,8 @@ button { font-family: var(--font-family); cursor: pointer; }
   object-fit: contain;
 }
 
-/* Hero Visual – SVG rendered as full-width background overlay */
-.hero-visual {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 1;
-  /* Use the asset as full-width background */
-  background-image: url('assets/Hero Section.svg');
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center;
-}
-
-/* The img inside .hero-visual is hidden – SVG used as CSS bg */
-.hero-artwork { display: none; }
+/* Hero Visual – hidden, background SVG contains the illustration */
+.hero-visual { display: none; }
 
 /* =============================================
    JOBS SECTION
@@ -524,6 +511,33 @@ button { font-family: var(--font-family); cursor: pointer; }
 }
 
 /* =============================================
+   MOBILE FILTER BAR (hidden by default, shown on mobile)
+   ============================================= */
+.mobile-filter-bar {
+  display: none;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+.filter-search-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  background: var(--color-gray-4);
+  border: none;
+  border-radius: 4px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--color-dark-1);
+  width: 100%;
+}
+.filter-search-btn:hover { background: #d1d4e0; }
+
+/* =============================================
    JOBS GRID
    ============================================= */
 .jobs-grid {
@@ -581,8 +595,9 @@ button { font-family: var(--font-family); cursor: pointer; }
   white-space: nowrap;
   flex-shrink: 0;
 }
-.badge-outline { border: 1px solid var(--color-gray-1); color: var(--color-gray-1); }
-.badge-success { background: var(--positive-light); color: var(--positive); }
+.badge-outline  { border: 1px solid var(--color-gray-1); color: var(--color-gray-1); }
+.badge-success  { background: var(--positive-light); color: var(--positive); }
+.badge-warning  { background: #fff8e7; color: #f9b217; }
 
 .salary-text   { font-size: 14px; color: var(--color-gray-2); white-space: nowrap; }
 
@@ -617,59 +632,84 @@ button { font-family: var(--font-family); cursor: pointer; }
    RESPONSIVE: TABLET  ≤ 1024px
    =================================================== */
 @media (max-width: 1024px) {
-
   /* header */
   .header { padding: 0 20px; }
-
-  /* hide desktop nav, show hamburger */
-  .primary-nav { display: none; }
-  .hamburger   { display: flex; }
 
   /* show mobile nav overlay in DOM */
   .mobile-nav-overlay { display: block; pointer-events: none; }
   .mobile-nav-overlay.open { pointer-events: auto; }
 
   /* hero */
-  .hero-visual {
-    width: 40%;
-    opacity: .9;
+  .hero-section {
+    min-height: 136px;
+    height: 136px;
+    background: url('assets/Hero Section - Tablet.svg') center/cover no-repeat;
+    padding: 0;
   }
+
+  .hero-section .container {
+    min-height: 136px;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+
+  .recruiter-name { font-size: 16px; }
+  .recruiter-desc { font-size: 10px; line-height: 1.3; }
+
+  .social-links { gap: 10px; }
+  .social-icon { width: 22px; height: 22px; border-radius: 8px; }
 
   /* jobs */
   .jobs-section { padding-left: 20px; padding-right: 20px; }
 
   /* sidebar: sticky on tablet at smaller width */
-  .filter-sidebar { width: 220px; }
+  .filter-sidebar { width: 173px; }
+}
+
+@media (max-width: 743px) {
+  /* hide desktop nav, show hamburger */
+  .primary-nav { display: none; }
+  .hamburger   { display: flex; }
 }
 
 /* ===================================================
-   RESPONSIVE: TABLET SMALL + LARGE MOBILE  ≤ 768px
+   RESPONSIVE: MOBILE  ≤ 740px
    =================================================== */
-@media (max-width: 768px) {
+@media (max-width: 740px) {
 
-  /* Header */
-  .header { height: 56px; padding: 0 16px; }
+  /* Header: hamburger left, logo hidden, Contact Me right */
+  .header { height: 56px; padding: 10px 16px; }
   :root   { --header-h: 56px; }
+  .header-logo { display: none; }
+  .btn-primary { display: flex; padding: 6px 10px; font-size: 12px; }
 
-  /* Hero: stack content, hide illustration */
-  .hero-section  { min-height: auto; padding: 24px 16px 28px; }
+  /* Hero: gradient background (not SVG) */
+  .hero-section {
+    height: auto;
+    min-height: auto;
+    background:
+      linear-gradient(48.32deg, rgba(3, 106, 229, 0) 57.23%, rgba(3, 106, 229, 0.7) 109.74%),
+      linear-gradient(164.28deg, rgb(172, 193, 247) 0%, rgb(255, 255, 255) 88.59%);
+    padding: 18px 0;
+  }
+  .hero-section .container {
+    height: auto;
+    min-height: unset;
+  }
 
   .recruiter-intro { max-width: 100%; }
-
   .hero-visual { display: none; }
 
   /* Jobs section */
-  .jobs-section {
+  .jobs-section { padding: 19px 0 32px; }
+  .jobs-section .container {
     flex-direction: column;
-    padding: 0 16px 60px;
+    gap: 19px;
+    align-items: stretch;
   }
 
-  /* Show filter toggle button */
-  .filter-toggle-btn {
-    display: flex;
-    margin-top: 20px;
-    margin-bottom: 0;
-  }
+  /* Show mobile filter bar */
+  .mobile-filter-bar { display: flex; }
 
   /* Sidebar becomes a slide-in panel */
   .filter-sidebar {
@@ -686,45 +726,32 @@ button { font-family: var(--font-family); cursor: pointer; }
     transform: translateX(-110%);
     transition: transform .28s cubic-bezier(.4,0,.2,1);
     padding-top: 16px;
-    top: 0;
   }
   .filter-sidebar.open { transform: translateX(0); }
-
   .sidebar-header { display: flex; }
 
-  /* Grid: single column on mobile */
-  .jobs-grid { grid-template-columns: 1fr; margin-top: 16px; }
+  /* Grid: single column */
+  .jobs-grid { grid-template-columns: 1fr; margin-top: 0; gap: 16px; }
 
-  /* Cards: auto height */
-  .job-card { min-height: auto; height: auto; }
-
-  /* Job title smaller wrapping allowed */
-  .job-title { white-space: normal; }
-  .company-name { white-space: normal; }
+  /* Cards */
+  .job-card { min-height: auto; height: auto; padding: 16px; gap: 20px; }
+  .job-title { font-size: 16px; white-space: normal; }
+  .company-name { font-size: 14px; white-space: normal; }
 }
 
 /* ===================================================
-   RESPONSIVE: SMALL MOBILE  ≤ 480px
+   RESPONSIVE: SMALL MOBILE  ≤ 480px  (375px target)
    =================================================== */
 @media (max-width: 480px) {
-  .header { padding: 0 12px; }
-
-  .btn-primary { padding: 8px 12px; font-size: 12px; }
-
-  .hero-section { padding: 20px 16px 24px; }
-
-  .employers-logo { width: 56px; height: 56px; }
-
-  .recruiter-name { font-size: 18px; }
-
+  /* Hero: exact Figma 375px specs */
+  .employers-logo { width: 64px; height: 64px; padding: 7px; }
+  .employers-logo img { width: 27px; height: 37px; }
+  .recruiter-name { font-size: 16px; }
   .social-links { gap: 10px; }
-  .social-icon  { width: 28px; height: 28px; }
-  .social-icon.telegram img { width: 28px; height: 28px; }
+  .social-icon  { width: 22px; height: 22px; border-radius: 8px; }
 
   .filter-sidebar { width: min(300px, 95vw); }
-
-  .salary-text { font-size: 12px; }
-  .company-name{ font-size: 14px; }
+  .salary-text { font-size: 14px; }
 }
 
 /* ===================================================

@@ -15,6 +15,13 @@
 
     <!-- ===== HEADER ===== -->
     <header class="header">
+      <!-- Hamburger (mobile/tablet) — must be first for CSS order on mobile -->
+      <button class="hamburger" id="hamburger-btn" aria-label="Open menu" aria-expanded="false">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
       <div class="header-logo">
         <img src="assets/65191e22b6830509bad840faa59deeb559bdb3a9.svg" alt="Sotatek Logo" />
       </div>
@@ -28,12 +35,6 @@
 
       <div class="header-actions">
         <button class="btn-primary" id="btn-contact-me">Contact Me</button>
-        <!-- Hamburger (mobile/tablet) -->
-        <button class="hamburger" id="hamburger-btn" aria-label="Open menu" aria-expanded="false">
-          <span></span>
-          <span></span>
-          <span></span>
-        </button>
       </div>
     </header>
 
@@ -50,14 +51,14 @@
       <div class="container">
         <div class="recruiter-intro">
           <div class="employers-logo">
-            <img src="assets/4af0074298f57b19e796f2e40d367a31d1aa785c.svg" alt="Ms. Nhan Phan" />
+            <img src="assets/4af0074298f57b19e796f2e40d367a31d1aa785c.svg" alt="Ms. Nga Le" />
           </div>
           <div class="recruiter-info">
             <div class="recruiter-info-top">
-              <h1 class="recruiter-name">Ms. Nhan Phan</h1>
+              <h1 class="recruiter-name">Ms. Nga Le</h1>
               <p class="recruiter-desc">
                 Recruitment Specialist<br>
-                <strong>5 years</strong> of experience in <strong>talent acquisition</strong><br>
+                <strong>5 years</strong> of experience in <strong>Talent Acquisition</strong><br>
                 Connecting talents with the right opportunities
               </p>
             </div>
@@ -87,13 +88,21 @@
     <!-- ===== JOBS SECTION ===== -->
     <section class="jobs-section">
       <div class="container">
-        <!-- Mobile filter toggle -->
-        <button class="filter-toggle-btn" id="filter-toggle-btn">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="20" y2="12"/><line x1="12" y1="18" x2="20" y2="18"/>
-          </svg>
-          Filter
-        </button>
+        <!-- Mobile filter bar (search + filter button, shown on mobile only) -->
+        <div class="mobile-filter-bar">
+          <div class="search-input-wrap">
+            <div class="search-icon-wrap">
+              <img src="assets/672a02a5a2fb601b9ec6bb4411d91997465d477a.svg" alt="Search" />
+            </div>
+            <input type="text" class="search-input" placeholder="Enter type of job" />
+          </div>
+          <button class="filter-search-btn" id="filter-toggle-btn">
+            Filter Search
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="20" y2="12"/><line x1="12" y1="18" x2="20" y2="18"/>
+            </svg>
+          </button>
+        </div>
 
         <!-- FILTER SIDEBAR -->
         <aside class="filter-sidebar" id="filter-sidebar">
@@ -145,47 +154,80 @@
     </section>
   </div>
 
-  <script>
-    /* ---- Job data ---- */
-    const jobs = [
-      { title: 'Business Analyst (KR)', level: 'Senior', type: 'Full-Time', salary: '$20,000 - $25,000', company: 'Engineering & Technology', location: 'Hanoi, Vietnam' },
-      { title: 'Business Analyst (KR)', level: 'Senior', type: 'Full-Time', salary: '$20,000 - $25,000', company: 'Engineering & Technology', location: 'Hanoi, Vietnam' },
-      { title: 'Business Analyst (KR)', level: 'Senior', type: 'Full-Time', salary: '$20,000 - $25,000', company: 'Engineering & Technology', location: 'Hanoi, Vietnam' },
-      { title: 'Business Analyst (KR)', level: 'Senior', type: 'Full-Time', salary: '$20,000 - $25,000', company: 'Engineering & Technology', location: 'Hanoi, Vietnam' },
-      { title: 'Business Analyst (KR)', level: 'Senior', type: 'Full-Time', salary: '$20,000 - $25,000', company: 'Engineering & Technology', location: 'Hanoi, Vietnam' },
-      { title: 'Business Analyst (KR)', level: 'Senior', type: 'Full-Time', salary: '$20,000 - $25,000', company: 'Engineering & Technology', location: 'Hanoi, Vietnam' },
-      { title: 'Business Analyst (KR)', level: 'Senior', type: 'Full-Time', salary: '$20,000 - $25,000', company: 'Engineering & Technology', location: 'Hanoi, Vietnam' },
-      { title: 'Business Analyst (KR)', level: 'Senior', type: 'Full-Time', salary: '$20,000 - $25,000', company: 'Engineering & Technology', location: 'Hanoi, Vietnam' },
-      { title: 'Business Analyst (KR)', level: 'Senior', type: 'Full-Time', salary: '$20,000 - $25,000', company: 'Engineering & Technology', location: 'Hanoi, Vietnam' },
-      { title: 'Business Analyst (KR)', level: 'Senior', type: 'Full-Time', salary: '$20,000 - $25,000', company: 'Engineering & Technology', location: 'Hanoi, Vietnam' },
-    ];
+  <!-- Supabase SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
 
-    document.getElementById('jobs-grid').innerHTML = jobs.map((job, i) => `
-      <div class="job-card" id="job-card-${i + 1}">
-        <div class="job-heading">
-          <div class="job-title-row">
-            <h2 class="job-title">${job.title}</h2>
-            <span class="badge badge-outline">${job.level}</span>
-          </div>
-          <div class="job-meta-row">
-            <span class="badge badge-success">${job.type}</span>
-            <span class="salary-text">Salary: ${job.salary}</span>
-          </div>
-        </div>
-        <div class="job-company">
-          <div class="company-logo">
-            <img src="assets/7b0da3ea4afe7c04031aa976eeebc9ce4e8c806a.svg" alt="SotaTek" />
-          </div>
-          <div class="company-info">
-            <p class="company-name">${job.company}</p>
-            <div class="company-location">
-              <img src="assets/a6ec0b2ce9cd7a493539e40b94e2637caf20eb59.svg" alt="Location" class="pin-icon" />
-              <span>${job.location}</span>
+  <script>
+    /* ---- Supabase init ---- */
+    const { createClient } = supabase;
+    const db = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    /* ---- Render job card ---- */
+    function jobCardHTML(job, index) {
+      const typeClass = job.type === 'Full-Time' ? 'badge-success'
+                      : job.type === 'Part-Time'  ? 'badge-warning'
+                      : 'badge-success';
+      return `
+        <div class="job-card" id="job-card-${index + 1}">
+          <div class="job-heading">
+            <div class="job-title-row">
+              <h2 class="job-title">${job.title}</h2>
+              <span class="badge badge-outline">${job.level}</span>
+            </div>
+            <div class="job-meta-row">
+              <span class="badge ${typeClass}">${job.type}</span>
+              <span class="salary-text">Salary: ${job.salary}</span>
             </div>
           </div>
-        </div>
-      </div>
-    `).join('');
+          <div class="job-company">
+            <div class="company-logo">
+              <img src="assets/7b0da3ea4afe7c04031aa976eeebc9ce4e8c806a.svg" alt="SotaTek" />
+            </div>
+            <div class="company-info">
+              <p class="company-name">${job.company}</p>
+              <div class="company-location">
+                <img src="assets/a6ec0b2ce9cd7a493539e40b94e2637caf20eb59.svg" alt="Location" class="pin-icon" />
+                <span>${job.location}</span>
+              </div>
+            </div>
+          </div>
+        </div>`;
+    }
+
+    /* ---- Load jobs from Supabase ---- */
+    const grid = document.getElementById('jobs-grid');
+
+    async function loadJobs() {
+      grid.innerHTML = '<p style="color:#7e8494;padding:24px 0">Đang tải dữ liệu...</p>';
+      const { data, error } = await db
+        .from('jobs')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        console.error('[Supabase] error:', error);
+        grid.innerHTML = `<p style="color:#e53935;padding:24px 0">
+          Lỗi: <strong>${error.code}</strong><br><small>${error.message}</small>
+        </p>`;
+        return;
+      }
+
+      if (!data.length) {
+        grid.innerHTML = '<p style="color:#7e8494;padding:24px 0">Chưa có việc làm nào.</p>';
+        return;
+      }
+
+      grid.innerHTML = data.map((job, i) => jobCardHTML(job, i)).join('');
+      console.log('[Supabase] Loaded', data.length, 'jobs');
+    }
+
+    loadJobs();
+
+    /* ---- Real-time: tự reload khi có thay đổi ---- */
+    db.channel('jobs-changes')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'jobs' }, loadJobs)
+      .subscribe();
 
     /* ---- Hamburger menu ---- */
     const hamburger = document.getElementById('hamburger-btn');
