@@ -170,8 +170,8 @@ button { font-family: var(--font-family); cursor: pointer; }
   justify-content: center;
   align-items: center;
   gap: 5px;
-  width: 36px;
-  height: 36px;
+  width: 24px;
+  height: 24px;
   border: none;
   background: transparent;
   padding: 4px;
