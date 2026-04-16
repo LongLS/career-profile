@@ -214,6 +214,19 @@
               <label class="checkbox-item"><input type="checkbox" name="level" value="senior"><span class="checkbox-custom"></span>Senior</label>
             </div>
           </div>
+
+          <div class="filter-divider"></div>
+
+          <!-- Job Category Filter -->
+          <div class="filter-group">
+            <h3 class="filter-title">Job Category</h3>
+            <div class="checkbox-list">
+              <label class="checkbox-item"><input type="checkbox" name="category" value="back-office"><span class="checkbox-custom"></span>Back Office</label>
+              <label class="checkbox-item"><input type="checkbox" name="category" value="engineering"><span class="checkbox-custom"></span>Engineering &amp; Technology</label>
+              <label class="checkbox-item"><input type="checkbox" name="category" value="operation"><span class="checkbox-custom"></span>Operation Support</label>
+              <label class="checkbox-item"><input type="checkbox" name="category" value="sales"><span class="checkbox-custom"></span>Sales &amp; Marketing</label>
+            </div>
+          </div>
         </aside>
 
         <!-- JOBS GRID -->
@@ -266,9 +279,18 @@
     /* ---- Job data & filter state ---- */
     const grid = document.getElementById('jobs-grid');
     let allJobs = [];
-    let selectedLevels   = new Set(); // empty = show all
-    let selectedLocation = '';        // empty = show all
-    let searchQuery      = '';        // empty = show all
+    let selectedLevels     = new Set(); // empty = show all
+    let selectedCategories = new Set(); // empty = show all
+    let selectedLocation   = '';        // empty = show all
+    let searchQuery        = '';        // empty = show all
+
+    // Map category value → substring to match against job.company
+    const CATEGORY_KEYWORDS = {
+      'back-office': 'back office',
+      'engineering': 'engineering',
+      'operation':   'operation',
+      'sales':       'sales',
+    };
 
     /* ---- Render filtered jobs ---- */
     function applyFilters() {
@@ -293,6 +315,15 @@
       const hasLevelFilter = selectedLevels.size > 0 && !selectedLevels.has('all');
       if (hasLevelFilter) {
         jobs = jobs.filter(job => selectedLevels.has((job.level || '').toLowerCase()));
+      }
+
+      // Filter by category (matches substring against job.company)
+      if (selectedCategories.size > 0) {
+        jobs = jobs.filter(job => {
+          const company = (job.company || '').toLowerCase();
+          return [...selectedCategories].some(cat =>
+            company.includes(CATEGORY_KEYWORDS[cat] || cat));
+        });
       }
 
       if (!jobs.length) {
@@ -332,6 +363,26 @@
     /* ---- Attach listeners for both sidebar & modal checkboxes ---- */
     document.querySelectorAll('input[name="level"], input[name="modal-level"]').forEach(cb => {
       cb.addEventListener('change', () => handleLevelChange(cb.value, cb.checked));
+    });
+
+    /* ---- Sync categories between sidebar & modal ---- */
+    function syncCategoryCheckboxes() {
+      ['category', 'modal-category'].forEach(name => {
+        document.querySelectorAll(`input[name="${name}"]`).forEach(cb => {
+          cb.checked = selectedCategories.has(cb.value);
+        });
+      });
+    }
+
+    function handleCategoryChange(value, checked) {
+      if (checked) selectedCategories.add(value);
+      else         selectedCategories.delete(value);
+      syncCategoryCheckboxes();
+      applyFilters();
+    }
+
+    document.querySelectorAll('input[name="category"], input[name="modal-category"]').forEach(cb => {
+      cb.addEventListener('change', () => handleCategoryChange(cb.value, cb.checked));
     });
 
     /* ---- Location dropdown logic ---- */
