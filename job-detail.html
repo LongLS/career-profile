@@ -195,6 +195,56 @@
     .apply-form-fields { display: flex; flex-direction: column; gap: 12px; width: 100%; }
     .apply-row         { display: flex; gap: 16px; width: 100%; }
 
+    /* Refer-a-friend fields: hidden by default, shown when form has .mode-refer */
+    .refer-only                       { display: none; }
+    .apply-form.mode-refer .refer-only { display: flex; }
+    .refer-candidate                  { flex-direction: column; gap: 12px; width: 100%; }
+
+    .refer-you-are {
+      flex-direction: row;
+      align-items: center;
+      gap: 24px;
+      width: 100%;
+      flex-wrap: wrap;
+    }
+    .refer-label {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--color-dark-1);
+    }
+    .refer-check {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 16px;
+      color: var(--color-dark-1);
+      cursor: pointer;
+      user-select: none;
+    }
+    .refer-check input[type="checkbox"] { display: none; }
+    .refer-check-box {
+      width: 20px; height: 20px;
+      border: 1.5px solid var(--color-gray-3);
+      border-radius: 4px;
+      background: var(--white);
+      position: relative;
+      flex-shrink: 0;
+      transition: background .15s, border-color .15s;
+    }
+    .refer-check input:checked + .refer-check-box {
+      background: var(--primary);
+      border-color: var(--primary);
+    }
+    .refer-check input:checked + .refer-check-box::after {
+      content: '';
+      position: absolute;
+      left: 6px; top: 3px;
+      width: 5px; height: 9px;
+      border: 2px solid var(--white);
+      border-top: none; border-left: none;
+      transform: rotate(45deg);
+    }
+
     .apply-input {
       flex: 1;
       min-width: 0;
@@ -405,15 +455,43 @@
           <input type="hidden" name="_template" value="table" />
           <input type="hidden" name="_captcha"  value="false" />
           <input type="hidden" name="job_title" value="" id="apply-job-title" />
+          <input type="hidden" name="form_type" value="apply"  id="apply-form-type" />
 
           <div class="apply-form-fields">
+            <!-- Refer-only: You are -->
+            <div class="refer-only refer-you-are">
+              <span class="refer-label">You are</span>
+              <label class="refer-check">
+                <input type="checkbox" name="referrer_type" value="SotaTeker" />
+                <span class="refer-check-box"></span>
+                SotaTeker
+              </label>
+              <label class="refer-check">
+                <input type="checkbox" name="referrer_type" value="Other" checked />
+                <span class="refer-check-box"></span>
+                Other
+              </label>
+            </div>
+
             <div class="apply-row">
-              <input class="apply-input" type="text"  name="name"  placeholder="Your name"  required />
-              <input class="apply-input" type="tel"   name="phone" placeholder="Your phone" required />
+              <input class="apply-input" type="text"  name="name"  placeholder="Your name *"  required />
+              <input class="apply-input" type="tel"   name="phone" placeholder="Your phone *" required />
             </div>
             <div class="apply-row">
-              <input class="apply-input" type="email" name="email" placeholder="Your email" required />
+              <input class="apply-input" type="email" name="email" placeholder="Your Email *" required />
             </div>
+
+            <!-- Refer-only: Candidate info -->
+            <div class="refer-only refer-candidate">
+              <div class="apply-row">
+                <input class="apply-input" type="text" name="candidate_name"  placeholder="Candidate's Full Name *" />
+                <input class="apply-input" type="tel"  name="candidate_phone" placeholder="Candidate's Phone *" />
+              </div>
+              <div class="apply-row">
+                <input class="apply-input" type="email" name="candidate_email" placeholder="Candidate's Email *" />
+              </div>
+            </div>
+
             <label class="apply-upload" id="apply-upload-label">
               <svg width="20" height="25" viewBox="0 0 20 25" fill="none" stroke="#036ae5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M12 1H3a2 2 0 00-2 2v19a2 2 0 002 2h14a2 2 0 002-2V8l-7-7z"/>
@@ -537,21 +615,20 @@
       document.getElementById('o-salary').textContent   = data.salary   || '—';
       document.getElementById('o-level').textContent    = data.level    || '—';
 
-      // Tab switch
-      document.querySelectorAll('.apply-tab').forEach(tab => {
-        tab.addEventListener('click', () => {
-          document.querySelectorAll('.apply-tab').forEach(t => t.classList.remove('active'));
-          tab.classList.add('active');
-        });
-      });
+      // Get form elements once, up front
+      const applyForm  = document.getElementById('apply-form');
+      const submitBtn  = document.getElementById('apply-submit-btn');
+      const subjectEl  = document.getElementById('apply-subject');
+      const formTypeEl = document.getElementById('apply-form-type');
+      const fileInput  = document.getElementById('apply-file');
+      const uploadText = document.getElementById('apply-upload-text');
 
       // Pre-fill hidden fields so the recipient knows which job was applied to
-      document.getElementById('apply-subject').value    = `Ứng tuyển: ${data.title}`;
-      document.getElementById('apply-job-title').value  = data.title;
+      subjectEl.value  = `Ứng tuyển: ${data.title}`;
+      formTypeEl.value = 'apply';
+      document.getElementById('apply-job-title').value = data.title;
 
       // Show the chosen file name in the upload label
-      const fileInput     = document.getElementById('apply-file');
-      const uploadText    = document.getElementById('apply-upload-text');
       fileInput.addEventListener('change', () => {
         if (fileInput.files.length) {
           uploadText.innerHTML = `<strong>${fileInput.files[0].name}</strong> — Click to change`;
@@ -560,9 +637,38 @@
         }
       });
 
-      // Form submit → send to Web3Forms
-      const applyForm = document.getElementById('apply-form');
-      const submitBtn = document.getElementById('apply-submit-btn');
+      // Candidate fields: only required when in refer mode
+      const candidateFields = ['candidate_name', 'candidate_phone', 'candidate_email'];
+      function setReferMode(isRefer) {
+        applyForm.classList.toggle('mode-refer', isRefer);
+        candidateFields.forEach(n => {
+          const el = applyForm.querySelector(`[name="${n}"]`);
+          if (el) el.required = isRefer;
+        });
+        formTypeEl.value = isRefer ? 'refer' : 'apply';
+        subjectEl.value  = isRefer
+          ? `Giới thiệu ứng viên: ${data.title}`
+          : `Ứng tuyển: ${data.title}`;
+      }
+
+      // Tab switch
+      document.querySelectorAll('.apply-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+          document.querySelectorAll('.apply-tab').forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+          setReferMode(tab.dataset.tab === 'refer');
+        });
+      });
+
+      // "You are" checkboxes behave like radios (one at a time)
+      const referChecks = applyForm.querySelectorAll('input[name="referrer_type"]');
+      referChecks.forEach(cb => {
+        cb.addEventListener('change', () => {
+          if (cb.checked) {
+            referChecks.forEach(other => { if (other !== cb) other.checked = false; });
+          }
+        });
+      });
 
       const FORMSUBMIT_EMAIL = 'work.ngaltt@gmail.com';
 
