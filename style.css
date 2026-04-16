@@ -271,22 +271,20 @@ button { font-family: var(--font-family); cursor: pointer; }
 }
 
 .employers-logo {
-  width:  clamp(64px, 6.53vw, 94px);
-  height: clamp(64px, 6.53vw, 94px);
+  width:  94px;
+  height: 94px;
   border-radius: 50%;
-  background: var(--white);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  overflow: hidden;
   flex-shrink: 0;
-  padding: clamp(8px, 0.76vw, 11px);
   box-shadow: 0 4px 16px rgba(0,0,0,.08);
 }
 
 .employers-logo img {
-  width:  clamp(28px, 2.72vw, 39px);
-  height: clamp(38px, 3.76vw, 54px);
-  object-fit: contain;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
 }
 
 .recruiter-info {
@@ -905,8 +903,7 @@ button { font-family: var(--font-family); cursor: pointer; }
    =================================================== */
 @media (max-width: 480px) {
   /* Hero: exact Figma 375px specs */
-  .employers-logo { width: 64px; height: 64px; padding: 7px; }
-  .employers-logo img { width: 27px; height: 37px; }
+  .employers-logo { width: 64px; height: 64px; }
   .recruiter-name { font-size: 16px; }
   .social-links { gap: 10px; }
   .social-icon  { width: 24px; height: 24px; border-radius: 8px; }
