@@ -326,9 +326,18 @@
           <span>Danh sách việc làm</span>
           <span id="jobs-count" style="font-size:13px;font-weight:400;color:var(--gray-2)"></span>
         </div>
-        <button class="btn btn-primary" id="btn-open-form">
-          + Thêm việc làm
-        </button>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <button class="btn btn-secondary" id="btn-download-template" title="Tải file Excel mẫu">
+            📥 Tải template
+          </button>
+          <button class="btn btn-secondary" id="btn-import-excel" title="Import nhiều việc làm từ file Excel">
+            📊 Import Excel
+          </button>
+          <button class="btn btn-primary" id="btn-open-form">
+            + Thêm việc làm
+          </button>
+          <input type="file" id="excel-file-input" accept=".xlsx,.xls,.csv" hidden />
+        </div>
       </div>
 
       <div class="table-wrap" id="table-wrap">
@@ -467,6 +476,8 @@
   <script src="supabase-config.js"></script>
   <!-- SortableJS -->
   <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.3/Sortable.min.js"></script>
+  <!-- SheetJS (for Excel import/export) -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
   <script>
     /* ── Supabase init ── */
@@ -726,6 +737,104 @@
         loadJobs();
       }
       pendingDeleteId = '';
+    });
+
+    /* ================================================
+       EXCEL IMPORT / TEMPLATE DOWNLOAD
+       ================================================ */
+    const JOB_COLUMNS = ['title', 'level', 'type', 'salary', 'company', 'location',
+                         'description', 'requirements', 'desirable', 'benefits'];
+    const REQUIRED_COLUMNS = ['title', 'level', 'type', 'salary', 'company', 'location'];
+
+    /* ── Download template ── */
+    document.getElementById('btn-download-template').addEventListener('click', () => {
+      const sampleRows = [
+        {
+          title: 'Business Analyst (KR)',
+          level: 'Senior',
+          type: 'Full-Time',
+          salary: 'Negotiable',
+          company: 'Engineering & Technology',
+          location: 'Hanoi, Vietnam',
+          description: 'Short job description here...',
+          requirements: 'Requirement 1\nRequirement 2\nRequirement 3',
+          desirable: 'Desirable item 1\nDesirable item 2',
+          benefits: 'Benefit 1\nBenefit 2\nBenefit 3',
+        },
+      ];
+      const ws = XLSX.utils.json_to_sheet(sampleRows, { header: JOB_COLUMNS });
+      // Set column widths for readability
+      ws['!cols'] = JOB_COLUMNS.map(() => ({ wch: 24 }));
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, 'Jobs');
+      XLSX.writeFile(wb, 'jobs-template.xlsx');
+    });
+
+    /* ── Import Excel ── */
+    const excelInput = document.getElementById('excel-file-input');
+    document.getElementById('btn-import-excel').addEventListener('click', () => excelInput.click());
+
+    excelInput.addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      // Reset so user can pick the same file again later
+      excelInput.value = '';
+
+      try {
+        const buf = await file.arrayBuffer();
+        const wb  = XLSX.read(buf, { type: 'array' });
+        const ws  = wb.Sheets[wb.SheetNames[0]];
+        const rows = XLSX.utils.sheet_to_json(ws, { defval: '' });
+
+        if (!rows.length) {
+          showToast('File rỗng, không có dữ liệu để import.', 'error');
+          return;
+        }
+
+        // Validate & normalise rows
+        const valid = [];
+        const errors = [];
+        rows.forEach((row, i) => {
+          const cleaned = {};
+          JOB_COLUMNS.forEach(col => {
+            cleaned[col] = (row[col] ?? '').toString().trim();
+          });
+          const missing = REQUIRED_COLUMNS.filter(c => !cleaned[c]);
+          if (missing.length) {
+            errors.push(`Dòng ${i + 2}: thiếu ${missing.join(', ')}`);
+          } else {
+            valid.push(cleaned);
+          }
+        });
+
+        if (!valid.length) {
+          showToast(`Không có dòng hợp lệ. ${errors.length} dòng lỗi.`, 'error');
+          console.warn('[Import errors]', errors);
+          return;
+        }
+
+        const msg = `Sẽ import ${valid.length} việc làm` +
+                    (errors.length ? ` (${errors.length} dòng lỗi sẽ bỏ qua — xem Console để chi tiết)` : '') +
+                    '.\n\nTiếp tục?';
+        if (!confirm(msg)) return;
+        if (errors.length) console.warn('[Import errors]', errors);
+
+        // Assign display_order continuing from current max
+        const startOrder = allDocs.length ? Math.max(...allDocs.map(d => d.display_order || 0)) : 0;
+        const payload = valid.map((row, i) => ({ ...row, display_order: startOrder + i + 1 }));
+
+        isReordering = true; // avoid real-time reload storm during batch insert
+        const { error } = await db.from('jobs').insert(payload);
+        isReordering = false;
+
+        if (error) throw error;
+        showToast(`Đã import ${valid.length} việc làm!`);
+        loadJobs();
+      } catch (err) {
+        console.error(err);
+        isReordering = false;
+        showToast('Lỗi import: ' + err.message, 'error');
+      }
     });
   </script>
 </body>
