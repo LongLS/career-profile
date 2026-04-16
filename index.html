@@ -237,7 +237,7 @@
                       : job.type === 'Part-Time'  ? 'badge-warning'
                       : 'badge-success';
       return `
-        <div class="job-card" id="job-card-${index + 1}">
+        <a class="job-card" id="job-card-${index + 1}" href="job-detail.html?id=${job.id}">
           <div class="job-heading">
             <div class="job-title-row">
               <h2 class="job-title">${job.title}</h2>
@@ -260,7 +260,7 @@
               </div>
             </div>
           </div>
-        </div>`;
+        </a>`;
     }
 
     /* ---- Job data & filter state ---- */

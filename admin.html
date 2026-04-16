@@ -250,11 +250,10 @@
 
     label { font-size: 13px; font-weight: 600; color: var(--gray-1); }
 
-    input, select {
-      height: 42px;
+    input, select, textarea {
       border: 1px solid var(--gray-3);
       border-radius: 8px;
-      padding: 0 12px;
+      padding: 10px 12px;
       font-family: var(--font);
       font-size: 14px;
       color: var(--dark);
@@ -262,8 +261,19 @@
       transition: border-color .2s;
       outline: none;
     }
-    input:focus, select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(3,106,229,.08); }
-    input::placeholder { color: var(--gray-3); }
+    input, select { height: 42px; padding: 0 12px; }
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(3,106,229,.08);
+    }
+    input::placeholder, textarea::placeholder { color: var(--gray-3); }
+
+    textarea {
+      min-height: 90px;
+      resize: vertical;
+      line-height: 1.5;
+    }
+    .form-hint { font-size: 12px; color: var(--gray-2); font-weight: 400; }
 
     /* ── Delete confirm modal ── */
     .confirm-modal {
@@ -394,13 +404,45 @@
               </select>
             </div>
 
+            <div class="form-group full">
+              <label for="f-description">
+                Job Description
+                <span class="form-hint">— Mỗi đoạn văn cách nhau bằng một dòng trống</span>
+              </label>
+              <textarea id="f-description" rows="5" placeholder="Mô tả công việc..."></textarea>
+            </div>
+
+            <div class="form-group full">
+              <label for="f-requirements">
+                Requirements
+                <span class="form-hint">— Mỗi yêu cầu một dòng, sẽ hiển thị dạng bullet list</span>
+              </label>
+              <textarea id="f-requirements" rows="5" placeholder="3+ years experience&#10;Familiar with Agile&#10;..."></textarea>
+            </div>
+
+            <div class="form-group full">
+              <label for="f-desirable">
+                Desirable
+                <span class="form-hint">— Mỗi mục một dòng (tuỳ chọn)</span>
+              </label>
+              <textarea id="f-desirable" rows="4" placeholder="Working knowledge of eCommerce&#10;..."></textarea>
+            </div>
+
+            <div class="form-group full">
+              <label for="f-benefits">
+                Benefits
+                <span class="form-hint">— Mỗi phúc lợi một dòng</span>
+              </label>
+              <textarea id="f-benefits" rows="5" placeholder="28 days holiday&#10;Healthcare package&#10;..."></textarea>
+            </div>
+
           </div>
         </form>
       </div>
 
       <div class="modal-footer">
-        <button class="btn btn-secondary" id="btn-cancel">Huỷ</button>
-        <button class="btn btn-primary" id="btn-submit">+ Thêm việc làm</button>
+        <button class="btn btn-secondary" id="btn-cancel" type="button">Huỷ</button>
+        <button class="btn btn-primary" id="btn-submit" type="submit" form="job-form">+ Thêm việc làm</button>
       </div>
     </div>
   </div>
@@ -604,12 +646,16 @@
       btnSubmit.textContent = 'Đang lưu...';
 
       const data = {
-        title:    document.getElementById('f-title').value.trim(),
-        level:    document.getElementById('f-level').value,
-        type:     document.getElementById('f-type').value,
-        salary:   document.getElementById('f-salary').value.trim(),
-        company:  document.getElementById('f-company').value.trim(),
-        location: document.getElementById('f-location').value.trim(),
+        title:        document.getElementById('f-title').value.trim(),
+        level:        document.getElementById('f-level').value,
+        type:         document.getElementById('f-type').value,
+        salary:       document.getElementById('f-salary').value.trim(),
+        company:      document.getElementById('f-company').value.trim(),
+        location:     document.getElementById('f-location').value.trim(),
+        description:  document.getElementById('f-description').value.trim(),
+        requirements: document.getElementById('f-requirements').value.trim(),
+        desirable:    document.getElementById('f-desirable').value.trim(),
+        benefits:     document.getElementById('f-benefits').value.trim(),
       };
 
       try {
@@ -639,12 +685,16 @@
       const j = allDocs.find(d => d.id === id);
       if (!j) return;
       editIdEl.value = id;
-      document.getElementById('f-title').value    = j.title;
-      document.getElementById('f-level').value    = j.level;
-      document.getElementById('f-type').value     = j.type;
-      document.getElementById('f-salary').value   = j.salary;
-      document.getElementById('f-company').value  = j.company;
-      document.getElementById('f-location').value = j.location;
+      document.getElementById('f-title').value        = j.title;
+      document.getElementById('f-level').value        = j.level;
+      document.getElementById('f-type').value         = j.type;
+      document.getElementById('f-salary').value       = j.salary;
+      document.getElementById('f-company').value      = j.company;
+      document.getElementById('f-location').value     = j.location;
+      document.getElementById('f-description').value  = j.description  || '';
+      document.getElementById('f-requirements').value = j.requirements || '';
+      document.getElementById('f-desirable').value    = j.desirable    || '';
+      document.getElementById('f-benefits').value     = j.benefits     || '';
       openFormModal(true);
     }
 

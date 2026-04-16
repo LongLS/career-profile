@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Job Detail | SotaTek</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* ── Job detail layout ── */
+    .detail-topbar {
+      background: var(--color-gray-5);
+      padding: 16px 100px;
+      width: 100%;
+    }
+    .detail-topbar-inner {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      max-width: 1240px;
+      margin: 0 auto;
+    }
+    .detail-logo {
+      width: 100px;
+      height: 100px;
+      border-radius: 112px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px;
+      flex-shrink: 0;
+      background-image: linear-gradient(51.14deg, rgb(180,219,255) 49.84%, rgba(180,219,255,0) 150.9%);
+    }
+    .detail-logo img { width: 43px; height: 60px; object-fit: contain; }
+
+    .detail-heading     { display: flex; flex-direction: column; gap: 12px; }
+    .detail-title-row   { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .detail-title {
+      font-size: 32px;
+      font-weight: 600;
+      color: var(--color-dark-1);
+      letter-spacing: -0.5px;
+      line-height: 1.4;
+    }
+    .detail-company-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .detail-company {
+      font-size: 16px;
+      color: var(--primary);
+      text-decoration: underline;
+    }
+
+    /* ── Body layout ── */
+    .detail-body {
+      display: flex;
+      gap: 40px;
+      padding: 40px 100px 64px;
+      max-width: 1440px;
+      margin: 0 auto;
+      width: 100%;
+      align-items: flex-start;
+    }
+    .detail-main {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+    .detail-section       { display: flex; flex-direction: column; gap: 8px; }
+    .detail-section-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--color-dark-1);
+      line-height: 1.4;
+    }
+    .detail-section p,
+    .detail-section li {
+      font-size: 14px;
+      color: var(--color-dark-1);
+      line-height: 1.4;
+    }
+    .detail-section ul { padding-left: 21px; }
+    .detail-section li { margin-bottom: 10px; }
+    .detail-section li:last-child { margin-bottom: 0; }
+
+    /* ── Sidebar ── */
+    .detail-sidebar {
+      width: 500px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .job-overview-card {
+      border: 2px solid var(--color-gray-4);
+      padding: 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .job-overview-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--color-dark-1);
+      line-height: 1.4;
+    }
+    .job-overview-grid {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .overview-item {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      flex: 1;
+      min-width: 0;
+    }
+    .overview-icon {
+      width: 32px;
+      height: 32px;
+      color: var(--primary);
+    }
+    .overview-item-label {
+      font-size: 14px;
+      color: var(--color-gray-1);
+      line-height: 1.4;
+    }
+    .overview-item-value {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--color-dark-1);
+      line-height: 1.4;
+    }
+
+    /* ── Apply card ── */
+    .apply-card {
+      background: var(--white);
+      border-radius: 12px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      align-items: center;
+      box-shadow: 0px 12px 48px rgba(0, 44, 109, 0.1);
+    }
+    .apply-tabs {
+      background: var(--color-gray-5);
+      border-radius: 50px;
+      display: flex;
+      gap: 8px;
+      padding: 4px;
+      height: 50px;
+      width: 288px;
+    }
+    .apply-tab {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--color-gray-2);
+      border-radius: 50px;
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      font-family: var(--font-family);
+      transition: background .2s, color .2s;
+    }
+    .apply-tab.active {
+      background: var(--white);
+      color: var(--color-dark-1);
+      box-shadow: 0 4px 40px rgba(167,169,183,.15);
+    }
+
+    .apply-heading        { display: flex; flex-direction: column; gap: 4px; width: 100%; text-align: center; }
+    .apply-heading h3 {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--color-dark-1);
+      line-height: 1.4;
+    }
+    .apply-heading p {
+      font-size: 14px;
+      color: var(--color-gray-1);
+      line-height: 1.4;
+    }
+
+    .apply-form        { display: flex; flex-direction: column; gap: 24px; width: 100%; align-items: center; }
+    .apply-form-fields { display: flex; flex-direction: column; gap: 12px; width: 100%; }
+    .apply-row         { display: flex; gap: 16px; width: 100%; }
+
+    .apply-input {
+      flex: 1;
+      min-width: 0;
+      height: 40px;
+      border: 1px solid var(--color-gray-4);
+      border-radius: 4px;
+      padding: 0 16px;
+      font-family: var(--font-family);
+      font-size: 14px;
+      color: var(--color-dark-1);
+      background: var(--white);
+      outline: none;
+      transition: border-color .2s;
+    }
+    .apply-input:focus { border-color: var(--primary); }
+    .apply-input::placeholder { color: var(--color-gray-2); }
+
+    .apply-upload {
+      background: var(--color-gray-5);
+      border-radius: 4px;
+      padding: 24px 15px 24px 20px;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      cursor: pointer;
+      border: none;
+      font-family: var(--font-family);
+      transition: background .2s;
+    }
+    .apply-upload:hover { background: #eceff6; }
+    .apply-upload-text {
+      font-size: 16px;
+      color: var(--color-gray-1);
+      line-height: 1.4;
+    }
+    .apply-upload-text strong { color: var(--primary); font-weight: 600; }
+
+    .apply-submit {
+      background: #10a943;
+      color: var(--white);
+      height: 46px;
+      width: 100%;
+      border: none;
+      border-radius: 4px;
+      font-family: var(--font-family);
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow:
+        0 1px 2px rgba(8,8,8,.2),
+        0 4px 4px rgba(8,8,8,.08),
+        inset 0 1px 1px rgba(255,255,255,.2),
+        inset 0 6px 12px rgba(255,255,255,.12);
+      transition: background .2s, transform .15s;
+    }
+    .apply-submit:hover  { background: #0e9539; }
+    .apply-submit:active { transform: scale(.98); }
+
+    /* ── Loading / error state ── */
+    .detail-state {
+      padding: 80px 24px;
+      text-align: center;
+      color: var(--color-gray-2);
+      font-size: 14px;
+    }
+    .detail-state.error { color: #e53935; }
+
+    /* ── Responsive ── */
+    @media (max-width: 1200px) {
+      .detail-topbar { padding: 16px 24px; }
+      .detail-body   { padding: 32px 24px 48px; }
+      .detail-sidebar { width: 400px; }
+    }
+
+    @media (max-width: 900px) {
+      .detail-body   { flex-direction: column; }
+      .detail-sidebar { width: 100%; }
+      .detail-title   { font-size: 24px; }
+      .detail-logo    { width: 72px; height: 72px; padding: 10px; }
+      .detail-logo img { width: 32px; height: 44px; }
+      .job-overview-grid { flex-direction: column; gap: 16px; }
+    }
+
+    @media (max-width: 480px) {
+      .detail-topbar { padding: 12px 16px; }
+      .detail-body   { padding: 20px 16px 40px; gap: 24px; }
+      .detail-topbar-inner { gap: 16px; }
+      .detail-title  { font-size: 20px; }
+      .job-overview-card { padding: 20px; }
+      .apply-card    { padding: 16px; }
+      .apply-row     { flex-direction: column; gap: 12px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="career-screen">
+
+    <!-- ===== HEADER (same as index.html) ===== -->
+    <header class="header">
+      <button class="hamburger" id="hamburger-btn" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+
+      <div class="header-logo">
+        <a href="index.html">
+          <img src="assets/65191e22b6830509bad840faa59deeb559bdb3a9.svg" alt="Sotatek Logo" />
+        </a>
+      </div>
+
+      <nav class="primary-nav" id="primary-nav">
+        <a href="index.html" class="nav-item active">List Jobs</a>
+        <a href="#" class="nav-item">Information</a>
+        <a href="#" class="nav-item">Benefits</a>
+      </nav>
+
+      <div class="header-actions">
+        <button class="btn-primary">Contact Me</button>
+      </div>
+    </header>
+
+    <div class="mobile-nav-overlay" id="mobile-nav-overlay"></div>
+    <nav class="mobile-nav" id="mobile-nav">
+      <a href="index.html" class="mobile-nav-item active">List Jobs</a>
+      <a href="#" class="mobile-nav-item">Information</a>
+      <a href="#" class="mobile-nav-item">Benefits</a>
+    </nav>
+
+    <!-- ===== TOPBAR (logo + title) ===== -->
+    <section class="detail-topbar">
+      <div class="detail-topbar-inner">
+        <div class="detail-logo">
+          <img src="assets/7b0da3ea4afe7c04031aa976eeebc9ce4e8c806a.svg" alt="SotaTek" />
+        </div>
+        <div class="detail-heading">
+          <div class="detail-title-row">
+            <h1 class="detail-title" id="d-title">Loading...</h1>
+            <span class="badge badge-outline" id="d-level"></span>
+          </div>
+          <div class="detail-company-row">
+            <a href="#" class="detail-company" id="d-company">SotaTek</a>
+            <span class="badge badge-success" id="d-type"></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== BODY ===== -->
+    <div id="detail-root" class="detail-body">
+      <p class="detail-state">Đang tải dữ liệu...</p>
+    </div>
+  </div>
+
+  <!-- Template for loaded detail body -->
+  <template id="detail-body-tpl">
+    <div class="detail-main" id="detail-main"></div>
+
+    <aside class="detail-sidebar">
+      <!-- Job Overview -->
+      <div class="job-overview-card">
+        <h3 class="job-overview-title">Job Overview</h3>
+        <div class="job-overview-grid">
+          <div class="overview-item">
+            <svg class="overview-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M16 18a4 4 0 100-8 4 4 0 000 8z"/>
+              <path d="M16 29s10-9 10-17a10 10 0 10-20 0c0 8 10 17 10 17z"/>
+            </svg>
+            <span class="overview-item-label">Job Location</span>
+            <span class="overview-item-value" id="o-location">—</span>
+          </div>
+
+          <div class="overview-item">
+            <svg class="overview-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="4" y="8" width="24" height="18" rx="2"/>
+              <path d="M4 12h24M22 18h2"/>
+            </svg>
+            <span class="overview-item-label">Salary</span>
+            <span class="overview-item-value" id="o-salary">—</span>
+          </div>
+
+          <div class="overview-item">
+            <svg class="overview-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M16 4l12 6-12 6L4 10l12-6z"/>
+              <path d="M4 16l12 6 12-6M4 22l12 6 12-6"/>
+            </svg>
+            <span class="overview-item-label">Job Level</span>
+            <span class="overview-item-value" id="o-level">—</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Apply card -->
+      <div class="apply-card">
+        <div class="apply-tabs">
+          <button class="apply-tab active" data-tab="apply">Apply Now</button>
+          <button class="apply-tab"         data-tab="refer">Refer a friend</button>
+        </div>
+
+        <div class="apply-heading">
+          <h3>Are you Ready to Start your Career With SotaTek?</h3>
+          <p>Please leave us your information to apply</p>
+        </div>
+
+        <form class="apply-form" id="apply-form" enctype="multipart/form-data">
+          <!-- FormSubmit.co — free, unlimited, file uploads supported -->
+          <input type="hidden" name="_subject"  value="" id="apply-subject" />
+          <input type="hidden" name="_template" value="table" />
+          <input type="hidden" name="_captcha"  value="false" />
+          <input type="hidden" name="job_title" value="" id="apply-job-title" />
+
+          <div class="apply-form-fields">
+            <div class="apply-row">
+              <input class="apply-input" type="text"  name="name"  placeholder="Your name"  required />
+              <input class="apply-input" type="tel"   name="phone" placeholder="Your phone" required />
+            </div>
+            <div class="apply-row">
+              <input class="apply-input" type="email" name="email" placeholder="Your email" required />
+            </div>
+            <label class="apply-upload" id="apply-upload-label">
+              <svg width="20" height="25" viewBox="0 0 20 25" fill="none" stroke="#036ae5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 1H3a2 2 0 00-2 2v19a2 2 0 002 2h14a2 2 0 002-2V8l-7-7z"/>
+                <path d="M12 1v7h7M6 15l4-4 4 4M10 11v8"/>
+              </svg>
+              <span class="apply-upload-text" id="apply-upload-text">Drag and Drop here or <strong>Browse files</strong></span>
+              <input type="file" name="attachment" id="apply-file" accept=".pdf,.doc,.docx" hidden />
+            </label>
+          </div>
+          <button type="submit" class="apply-submit" id="apply-submit-btn">Apply</button>
+        </form>
+      </div>
+    </aside>
+  </template>
+
+  <!-- Supabase SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+
+  <script>
+    const { createClient } = supabase;
+    const db = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    /* ---- Hamburger menu ---- */
+    const hamburger = document.getElementById('hamburger-btn');
+    const mobileNav = document.getElementById('mobile-nav');
+    const overlay   = document.getElementById('mobile-nav-overlay');
+
+    function toggleMenu(open) {
+      hamburger.classList.toggle('open', open);
+      mobileNav.classList.toggle('open', open);
+      overlay.classList.toggle('open', open);
+      hamburger.setAttribute('aria-expanded', open);
+      document.body.style.overflow = open ? 'hidden' : '';
+    }
+    hamburger.addEventListener('click', () => toggleMenu(!mobileNav.classList.contains('open')));
+    overlay.addEventListener('click',   () => toggleMenu(false));
+
+    /* ---- Escape HTML to avoid XSS ---- */
+    function escapeHTML(s) {
+      return (s || '').replace(/[&<>"']/g, c => ({
+        '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+      }[c]));
+    }
+
+    /* ---- Build description paragraphs (split on blank lines) ---- */
+    function paragraphsHTML(text) {
+      if (!text) return '';
+      return text.split(/\n\s*\n/)
+        .map(p => p.trim()).filter(Boolean)
+        .map(p => `<p>${escapeHTML(p).replace(/\n/g, '<br>')}</p>`)
+        .join('');
+    }
+
+    /* ---- Build bullet list (one item per line) ---- */
+    function bulletsHTML(text) {
+      if (!text) return '';
+      const items = text.split('\n').map(l => l.trim()).filter(Boolean);
+      if (!items.length) return '';
+      return '<ul>' + items.map(li => `<li>${escapeHTML(li)}</li>`).join('') + '</ul>';
+    }
+
+    /* ---- Build all content sections; hide empty ones ---- */
+    function buildSections(data) {
+      const sections = [
+        { title: 'Job Description', html: paragraphsHTML(data.description) },
+        { title: 'Requirements',    html: bulletsHTML(data.requirements)   },
+        { title: 'Desirable',       html: bulletsHTML(data.desirable)      },
+        { title: 'Benefits',        html: bulletsHTML(data.benefits)       },
+      ].filter(s => s.html);
+
+      if (!sections.length) {
+        return '<p class="detail-state">Chưa có mô tả chi tiết cho vị trí này.</p>';
+      }
+      return sections.map(s => `
+        <div class="detail-section">
+          <h2 class="detail-section-title">${s.title}</h2>
+          ${s.html}
+        </div>`).join('');
+    }
+
+    /* ---- Load job by id ---- */
+    const params = new URLSearchParams(window.location.search);
+    const jobId  = params.get('id');
+    const root   = document.getElementById('detail-root');
+
+    async function loadJob() {
+      if (!jobId) {
+        root.innerHTML = '<p class="detail-state error">Thiếu tham số id. <a href="index.html">Quay lại danh sách</a></p>';
+        return;
+      }
+
+      const { data, error } = await db.from('jobs').select('*').eq('id', jobId).single();
+
+      if (error || !data) {
+        root.innerHTML = `<p class="detail-state error">
+          Không tìm thấy việc làm.<br>
+          <a href="index.html">Quay lại danh sách</a>
+        </p>`;
+        return;
+      }
+
+      // Topbar content
+      document.title = `${data.title} — SotaTek`;
+      document.getElementById('d-title').textContent   = data.title;
+      document.getElementById('d-level').textContent   = data.level || '';
+      document.getElementById('d-type').textContent    = data.type  || '';
+      const typeBadge = document.getElementById('d-type');
+      typeBadge.className = 'badge ' + (data.type === 'Part-Time' ? 'badge-warning' : 'badge-success');
+
+      // Body from template
+      const tpl = document.getElementById('detail-body-tpl');
+      root.innerHTML = '';
+      root.appendChild(tpl.content.cloneNode(true));
+
+      // Render dynamic content sections from DB
+      document.getElementById('detail-main').innerHTML = buildSections(data);
+
+      // Sidebar overview data
+      document.getElementById('o-location').textContent = data.location || '—';
+      document.getElementById('o-salary').textContent   = data.salary   || '—';
+      document.getElementById('o-level').textContent    = data.level    || '—';
+
+      // Tab switch
+      document.querySelectorAll('.apply-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+          document.querySelectorAll('.apply-tab').forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+        });
+      });
+
+      // Pre-fill hidden fields so the recipient knows which job was applied to
+      document.getElementById('apply-subject').value    = `Ứng tuyển: ${data.title}`;
+      document.getElementById('apply-job-title').value  = data.title;
+
+      // Show the chosen file name in the upload label
+      const fileInput     = document.getElementById('apply-file');
+      const uploadText    = document.getElementById('apply-upload-text');
+      fileInput.addEventListener('change', () => {
+        if (fileInput.files.length) {
+          uploadText.innerHTML = `<strong>${fileInput.files[0].name}</strong> — Click to change`;
+        } else {
+          uploadText.innerHTML = 'Drag and Drop here or <strong>Browse files</strong>';
+        }
+      });
+
+      // Form submit → send to Web3Forms
+      const applyForm = document.getElementById('apply-form');
+      const submitBtn = document.getElementById('apply-submit-btn');
+
+      const FORMSUBMIT_EMAIL = 'work.ngaltt@gmail.com';
+
+      applyForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        submitBtn.disabled    = true;
+        submitBtn.textContent = 'Đang gửi...';
+
+        try {
+          const formData = new FormData(applyForm);
+          const res = await fetch(`https://formsubmit.co/${FORMSUBMIT_EMAIL}`, {
+            method:  'POST',
+            body:    formData,
+            headers: { 'Accept': 'application/json' },
+          });
+
+          if (res.ok) {
+            alert('Gửi đơn ứng tuyển thành công! Chúng tôi sẽ liên hệ lại sớm.');
+            applyForm.reset();
+            uploadText.innerHTML = 'Drag and Drop here or <strong>Browse files</strong>';
+          } else {
+            const err = await res.json().catch(() => ({}));
+            alert('Lỗi khi gửi: ' + (err.message || 'Vui lòng thử lại.'));
+          }
+        } catch (err) {
+          console.error(err);
+          alert('Không gửi được đơn. Vui lòng kiểm tra kết nối.');
+        } finally {
+          submitBtn.disabled    = false;
+          submitBtn.textContent = 'Apply';
+        }
+      });
+    }
+
+    loadJob();
+  </script>
+</body>
+</html>
