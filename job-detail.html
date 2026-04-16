@@ -4,6 +4,21 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Job Detail | SotaTek</title>
+  <meta name="description" content="Job opportunity at SotaTek. Apply now or refer a friend." />
+
+  <!-- Open Graph (Facebook, LinkedIn, Slack, Zalo) -->
+  <meta property="og:type"        content="article" />
+  <meta property="og:title"       id="og-title"       content="Job Detail | SotaTek" />
+  <meta property="og:description" id="og-description" content="Job opportunity at SotaTek. Apply now or refer a friend." />
+  <meta property="og:image"       content="https://ngale.site/assets/share.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card"        content="summary_large_image" />
+  <meta name="twitter:title"       id="tw-title"       content="Job Detail | SotaTek" />
+  <meta name="twitter:description" id="tw-description" content="Job opportunity at SotaTek. Apply now or refer a friend." />
+  <meta name="twitter:image"       content="https://ngale.site/assets/share.jpg" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700&display=swap" rel="stylesheet">
@@ -631,8 +646,17 @@
         return;
       }
 
-      // Topbar content
+      // Topbar content + dynamic SEO/OG tags
       document.title = `${data.title} — SotaTek`;
+      const ogDesc = (data.description || `Apply now for ${data.title} at SotaTek.`).slice(0, 200);
+      ['og-title', 'tw-title'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.setAttribute('content', `${data.title} — SotaTek`);
+      });
+      ['og-description', 'tw-description'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.setAttribute('content', ogDesc);
+      });
       document.getElementById('d-title').textContent   = data.title;
       document.getElementById('d-level').textContent   = data.level || '';
       document.getElementById('d-type').textContent    = data.type  || '';
