@@ -251,6 +251,9 @@
     </section>
   </div>
 
+  <!-- Lottie Player -->
+  <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+
   <!-- Supabase SDK -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="supabase-config.js"></script>
@@ -343,7 +346,11 @@
       }
 
       if (!jobs.length) {
-        grid.innerHTML = '<p style="color:#7e8494;padding:24px 0">Không có việc làm phù hợp.</p>';
+        grid.innerHTML = `
+          <div style="display:flex;flex-direction:column;align-items:center;padding:32px 0;grid-column:1/-1;">
+            <lottie-player src="assets/no-data.json" background="transparent" speed="1" style="width:380px;height:380px;" loop autoplay></lottie-player>
+            <p style="color:#7e8494;font-size:14px;margin-top:8px;">Hiện tại chưa có việc làm phù hợp cho vị trí của bạn.</p>
+          </div>`;
         return;
       }
       grid.innerHTML = jobs.map((job, i) => jobCardHTML(job, i)).join('');
