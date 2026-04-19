@@ -831,22 +831,47 @@
           return;
         }
 
-        const msg = `Sẽ import ${valid.length} việc làm` +
-                    (errors.length ? ` (${errors.length} dòng lỗi sẽ bỏ qua — xem Console để chi tiết)` : '') +
-                    '.\n\nTiếp tục?';
+        // Skip rows whose title + location already exists in DB (case-insensitive)
+        const existingKeys = new Set(
+          allDocs.map(d => `${(d.title || '').toLowerCase().trim()}|${(d.location || '').toLowerCase().trim()}`)
+        );
+        const duplicates = [];
+        const toInsert = valid.filter(row => {
+          const key = `${row.title.toLowerCase()}|${row.location.toLowerCase()}`;
+          if (existingKeys.has(key)) {
+            duplicates.push(row.title);
+            return false;
+          }
+          return true;
+        });
+
+        if (!toInsert.length) {
+          showToast(`Tất cả ${valid.length} dòng đều đã có trong DB — không có gì để import.`, 'error');
+          console.warn('[Import duplicates]', duplicates);
+          return;
+        }
+
+        const parts = [`Sẽ import ${toInsert.length} việc làm mới`];
+        if (duplicates.length) parts.push(`${duplicates.length} dòng bị skip do trùng title + location`);
+        if (errors.length)     parts.push(`${errors.length} dòng lỗi`);
+        const msg = parts.join(', ') + '.\n\nXem Console để chi tiết.\nTiếp tục?';
         if (!confirm(msg)) return;
-        if (errors.length) console.warn('[Import errors]', errors);
+        if (duplicates.length) console.warn('[Import duplicates skipped]', duplicates);
+        if (errors.length)     console.warn('[Import errors]', errors);
 
         // Assign display_order continuing from current max
         const startOrder = allDocs.length ? Math.max(...allDocs.map(d => d.display_order || 0)) : 0;
-        const payload = valid.map((row, i) => ({ ...row, display_order: startOrder + i + 1 }));
+        const payload = toInsert.map((row, i) => ({ ...row, display_order: startOrder + i + 1 }));
 
         isReordering = true; // avoid real-time reload storm during batch insert
         const { error } = await db.from('jobs').insert(payload);
         isReordering = false;
 
         if (error) throw error;
-        showToast(`Đã import ${valid.length} việc làm!`);
+        const parts = [`Đã import ${toInsert.length} việc làm`];
+        if (duplicates.length) parts.push(`skip ${duplicates.length} trùng`);
+        if (errors.length)     parts.push(`${errors.length} lỗi`);
+        showToast(parts.join(', ') + '.');
         loadJobs();
       } catch (err) {
         console.error(err);
