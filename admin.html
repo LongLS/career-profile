@@ -333,6 +333,9 @@
           <button class="btn btn-secondary" id="btn-import-excel" title="Import nhiều việc làm từ file Excel">
             📊 Import Excel
           </button>
+          <button class="btn btn-secondary" id="btn-export-excel" title="Xuất toàn bộ việc làm hiện tại ra file Excel">
+            📤 Export Excel
+          </button>
           <button class="btn btn-primary" id="btn-open-form">
             + Thêm việc làm
           </button>
@@ -757,6 +760,32 @@
       const wb = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(wb, ws, 'Jobs');
       XLSX.writeFile(wb, 'jobs-template.xlsx');
+    });
+
+    /* ── Export all jobs to Excel ── */
+    document.getElementById('btn-export-excel').addEventListener('click', () => {
+      if (!allDocs.length) {
+        showToast('Chưa có việc làm nào để xuất.', 'error');
+        return;
+      }
+
+      // Pick only the fields we want (in the same order as the template)
+      const rows = allDocs.map(job => {
+        const row = {};
+        JOB_COLUMNS.forEach(col => { row[col] = job[col] ?? ''; });
+        return row;
+      });
+
+      const ws = XLSX.utils.json_to_sheet(rows, { header: JOB_COLUMNS });
+      ws['!cols'] = JOB_COLUMNS.map(() => ({ wch: 24 }));
+
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, 'Jobs');
+
+      const ts = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+      XLSX.writeFile(wb, `jobs-export-${ts}.xlsx`);
+
+      showToast(`Đã xuất ${rows.length} việc làm.`);
     });
 
     /* ── Import Excel ── */
