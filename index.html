@@ -347,9 +347,9 @@
 
       if (!jobs.length) {
         grid.innerHTML = `
-          <div style="display:flex;flex-direction:column;align-items:center;padding:32px 0;grid-column:1/-1;">
-            <lottie-player src="assets/no-data.json" background="transparent" speed="1" style="width:380px;height:380px;" loop autoplay></lottie-player>
-            <p style="color:#7e8494;font-size:14px;margin-top:8px;">Hiện tại chưa có việc làm phù hợp cho vị trí của bạn.</p>
+          <div class="no-data-state">
+            <lottie-player class="no-data-lottie" src="assets/no-data.json" background="transparent" speed="1" loop autoplay></lottie-player>
+            <p class="no-data-text">Hiện tại chưa có việc làm phù hợp cho vị trí của bạn.</p>
           </div>`;
         return;
       }

@@ -430,14 +430,6 @@
             </div>
 
             <div class="form-group full">
-              <label for="f-desirable">
-                Desirable
-                <span class="form-hint">— Mỗi mục một dòng (tuỳ chọn)</span>
-              </label>
-              <textarea id="f-desirable" rows="4" placeholder="Working knowledge of eCommerce&#10;..."></textarea>
-            </div>
-
-            <div class="form-group full">
               <label for="f-benefits">
                 Benefits
                 <span class="form-hint">— Mỗi phúc lợi một dòng</span>
@@ -665,7 +657,6 @@
         location:     document.getElementById('f-location').value.trim(),
         description:  document.getElementById('f-description').value.trim(),
         requirements: document.getElementById('f-requirements').value.trim(),
-        desirable:    document.getElementById('f-desirable').value.trim(),
         benefits:     document.getElementById('f-benefits').value.trim(),
       };
 
@@ -704,7 +695,6 @@
       document.getElementById('f-location').value     = j.location;
       document.getElementById('f-description').value  = j.description  || '';
       document.getElementById('f-requirements').value = j.requirements || '';
-      document.getElementById('f-desirable').value    = j.desirable    || '';
       document.getElementById('f-benefits').value     = j.benefits     || '';
       openFormModal(true);
     }
@@ -743,7 +733,7 @@
        EXCEL IMPORT / TEMPLATE DOWNLOAD
        ================================================ */
     const JOB_COLUMNS = ['title', 'level', 'type', 'salary', 'company', 'location',
-                         'description', 'requirements', 'desirable', 'benefits'];
+                         'description', 'requirements', 'benefits'];
     const REQUIRED_COLUMNS = ['title', 'level', 'type', 'salary', 'company', 'location'];
 
     /* ── Download template ── */
@@ -758,7 +748,6 @@
           location: 'Hanoi, Vietnam',
           description: 'Short job description here...',
           requirements: 'Requirement 1\nRequirement 2\nRequirement 3',
-          desirable: 'Desirable item 1\nDesirable item 2',
           benefits: 'Benefit 1\nBenefit 2\nBenefit 3',
         },
       ];

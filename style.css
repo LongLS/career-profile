@@ -664,6 +664,41 @@ button { font-family: var(--font-family); cursor: pointer; }
 
 
 /* =============================================
+   NO-DATA STATE (empty filter results)
+   ============================================= */
+.no-data-state {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32px 16px;
+  width: 100%;
+}
+.no-data-lottie {
+  width: 380px;
+  height: 380px;
+  max-width: 100%;
+  aspect-ratio: 1 / 1;
+}
+.no-data-text {
+  color: var(--color-gray-2);
+  font-size: 14px;
+  margin: 8px auto 0;
+  text-align: center;
+  max-width: 320px;
+  line-height: 2;
+  width: 100%;
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+@media (max-width: 480px) {
+  .no-data-state  { padding: 16px 8px; }
+  .no-data-lottie { width: 260px; height: 260px; }
+  .no-data-text   { font-size: 13px; }
+}
+
+/* =============================================
    FILTER MODAL (mobile popup)
    ============================================= */
 .filter-modal-overlay {
