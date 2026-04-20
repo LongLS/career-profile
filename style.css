@@ -303,6 +303,13 @@ button { font-family: var(--font-family); cursor: pointer; }
   color: var(--color-dark-3);
   letter-spacing: -0.5px;
 }
+.recruiter-email {
+  font-size: 16px;
+  font-weight: 400;
+  letter-spacing: 0;
+  color: var(--color-dark-3);
+  word-break: break-all;
+}
 
 .recruiter-desc {
   font-size: clamp(12px, 0.97vw, 14px);
@@ -1046,6 +1053,7 @@ button { font-family: var(--font-family); cursor: pointer; }
   }
 
   .recruiter-name { font-size: 16px; }
+  .recruiter-email { font-size: 12px; display: block; margin-top: 2px; }
   .recruiter-desc { font-size: 12px; line-height: 1.3; }
 
   .social-links { gap: 10px; }
@@ -1138,6 +1146,7 @@ button { font-family: var(--font-family); cursor: pointer; }
   /* Hero: exact Figma 375px specs */
   .employers-logo { width: 64px; height: 64px; }
   .recruiter-name { font-size: 16px; }
+  .recruiter-email { font-size: 11px; display: block; margin-top: 2px; }
   .social-links { gap: 10px; }
   .social-icon  { width: 24px; height: 24px; border-radius: 8px; }
 
