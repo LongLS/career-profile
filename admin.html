@@ -868,10 +868,10 @@
         isReordering = false;
 
         if (error) throw error;
-        const parts = [`Đã import ${toInsert.length} việc làm`];
-        if (duplicates.length) parts.push(`skip ${duplicates.length} trùng`);
-        if (errors.length)     parts.push(`${errors.length} lỗi`);
-        showToast(parts.join(', ') + '.');
+        const resultParts = [`Đã import ${toInsert.length} việc làm`];
+        if (duplicates.length) resultParts.push(`skip ${duplicates.length} trùng`);
+        if (errors.length)     resultParts.push(`${errors.length} lỗi`);
+        showToast(resultParts.join(', ') + '.');
         loadJobs();
       } catch (err) {
         console.error(err);
