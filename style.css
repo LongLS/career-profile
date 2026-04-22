@@ -604,6 +604,38 @@ button { font-family: var(--font-family); cursor: pointer; }
   color: inherit;
   text-decoration: none;
   transition: box-shadow .2s, transform .2s;
+  position: relative;
+  overflow: hidden;
+}
+
+.job-hot-ribbon {
+  position: absolute;
+  right: -50px;
+  bottom: 12px;
+  width: 150px;
+  padding: 5px 0;
+  background: #FCE9E9;
+  color: #D70000;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  text-align: center;
+  transform: rotate(-45deg);
+  transform-origin: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.job-hot-flame {
+  width: 20px;
+  height: 20px;
+  display: block;
+  flex-shrink: 0;
 }
 
 .job-card:hover {
@@ -681,12 +713,11 @@ button { font-family: var(--font-family); cursor: pointer; }
 
 .info-wrapper {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 40px;
+  align-items: flex-start;
+  gap: 32px;
   background: linear-gradient(to bottom, rgba(143,159,241,.10), rgba(143,159,241,0));
   border-radius: 18px;
-  padding: 60px 40px 40px;
+  padding: 60px 32px 32px;
   position: relative;
 }
 
@@ -696,8 +727,8 @@ button { font-family: var(--font-family); cursor: pointer; }
   background: var(--white);
   border-radius: 10px;
   padding: 48px 32px;
-  width: 590px;
-  flex-shrink: 0;
+  flex: 1;
+  min-width: 0;
 }
 
 .info-quote-badge {
@@ -728,19 +759,19 @@ button { font-family: var(--font-family); cursor: pointer; }
 .info-meta { margin-top: 20px; }
 .info-meta p { margin: 0; font-size: 16px; line-height: 1.7; }
 
-/* Right info background image */
+/* Right info illustration */
 .info-visual {
-  flex: 1;
-  min-width: 320px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  flex: 0 0 438px;
+  height: 438px;
+  border-radius: 10px;
+  overflow: hidden;
+  position: sticky;
+  top: calc(var(--header-h) + 24px);
 }
 .info-visual-bg {
   width: 100%;
-  max-width: 560px;
-  height: auto;
-  object-fit: contain;
+  height: 100%;
+  object-fit: cover;
   display: block;
 }
 
@@ -748,11 +779,11 @@ button { font-family: var(--font-family); cursor: pointer; }
   .info-section { padding: 40px 0; }
   .info-wrapper {
     flex-direction: column;
-    gap: 32px;
+    gap: 24px;
     padding: 48px 24px 24px;
   }
   .info-card { width: 100%; padding: 32px 24px; }
-  .info-visual { width: 100%; min-height: 480px; }
+  .info-visual { flex: 0 0 auto; width: 100%; height: 320px; position: static; }
 }
 
 @media (max-width: 600px) {
@@ -763,8 +794,7 @@ button { font-family: var(--font-family); cursor: pointer; }
   .info-quote-badge svg { width: 22px; height: 22px; }
   .info-text { font-size: 15px; }
   .info-meta p { font-size: 14px; }
-  .info-visual { min-width: 100%; }
-  .info-visual-bg { max-width: 100%; }
+  .info-visual { height: 240px; }
 }
 
 /* =============================================

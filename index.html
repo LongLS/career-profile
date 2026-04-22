@@ -269,7 +269,8 @@
                       : job.type === 'Part-Time'  ? 'badge-warning'
                       : 'badge-success';
       return `
-        <a class="job-card" id="job-card-${index + 1}" href="job-detail.html?id=${job.id}">
+        <a class="job-card${job.is_hot ? ' job-card--hot' : ''}" id="job-card-${index + 1}" href="job-detail.html?id=${job.id}">
+          ${job.is_hot ? `<div class="job-hot-ribbon" aria-label="Hot job"><lottie-player class="job-hot-flame" src="assets/Fire.json" background="transparent" speed="1" loop autoplay></lottie-player><span>Hot</span></div>` : ''}
           <div class="job-heading">
             <div class="job-title-row">
               <h2 class="job-title">${job.title}</h2>

@@ -274,6 +274,8 @@
       line-height: 1.5;
     }
     .form-hint { font-size: 12px; color: var(--gray-2); font-weight: 400; }
+    .f-checkbox { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 500; user-select: none; }
+    .f-checkbox input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; accent-color: #036ae5; }
 
     /* ── Delete confirm modal ── */
     .confirm-modal {
@@ -438,6 +440,13 @@
                 <span class="form-hint">— Mỗi phúc lợi một dòng</span>
               </label>
               <textarea id="f-benefits" rows="5" placeholder="28 days holiday&#10;Healthcare package&#10;..."></textarea>
+            </div>
+
+            <div class="form-group full">
+              <label class="f-checkbox">
+                <input type="checkbox" id="f-is-hot" />
+                <span>🔥 Đánh dấu là Hot (hiển thị ribbon HOT trên card)</span>
+              </label>
             </div>
 
           </div>
@@ -661,6 +670,7 @@
         description:  document.getElementById('f-description').value.trim(),
         requirements: document.getElementById('f-requirements').value.trim(),
         benefits:     document.getElementById('f-benefits').value.trim(),
+        is_hot:       document.getElementById('f-is-hot').checked,
       };
 
       try {
@@ -699,6 +709,7 @@
       document.getElementById('f-description').value  = j.description  || '';
       document.getElementById('f-requirements').value = j.requirements || '';
       document.getElementById('f-benefits').value     = j.benefits     || '';
+      document.getElementById('f-is-hot').checked     = !!j.is_hot;
       openFormModal(true);
     }
 
