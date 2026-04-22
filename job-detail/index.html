@@ -2,7 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <base href="/" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/png" href="assets/favicon.png" />
   <title>Job Detail | SotaTek</title>
   <meta name="description" content="Job opportunity at SotaTek. Apply now or refer a friend." />
 
@@ -397,15 +399,15 @@
       </button>
 
       <div class="header-logo">
-        <a href="index.html">
+        <a href="/">
           <img src="assets/65191e22b6830509bad840faa59deeb559bdb3a9.svg" alt="Sotatek Logo" />
         </a>
       </div>
 
       <nav class="primary-nav" id="primary-nav">
-        <a href="index.html" class="nav-item active">List Jobs</a>
-        <a href="information.html" class="nav-item">Information</a>
-        <a href="benefits.html" class="nav-item">Benefits</a>
+        <a href="/" class="nav-item active">List Jobs</a>
+        <a href="/information/" class="nav-item">Information</a>
+        <a href="/benefits/" class="nav-item">Benefits</a>
       </nav>
 
       <div class="header-actions">
@@ -415,9 +417,9 @@
 
     <div class="mobile-nav-overlay" id="mobile-nav-overlay"></div>
     <nav class="mobile-nav" id="mobile-nav">
-      <a href="index.html" class="mobile-nav-item active">List Jobs</a>
-      <a href="information.html" class="mobile-nav-item">Information</a>
-      <a href="benefits.html" class="mobile-nav-item">Benefits</a>
+      <a href="/" class="mobile-nav-item active">List Jobs</a>
+      <a href="/information/" class="mobile-nav-item">Information</a>
+      <a href="/benefits/" class="mobile-nav-item">Benefits</a>
     </nav>
 
     <!-- ===== TOPBAR (logo + title) ===== -->
@@ -631,7 +633,7 @@
 
     async function loadJob() {
       if (!jobId) {
-        root.innerHTML = '<p class="detail-state error">Thiếu tham số id. <a href="index.html">Quay lại danh sách</a></p>';
+        root.innerHTML = '<p class="detail-state error">Thiếu tham số id. <a href="/">Quay lại danh sách</a></p>';
         return;
       }
 
@@ -640,7 +642,7 @@
       if (error || !data) {
         root.innerHTML = `<p class="detail-state error">
           Không tìm thấy việc làm.<br>
-          <a href="index.html">Quay lại danh sách</a>
+          <a href="/">Quay lại danh sách</a>
         </p>`;
         return;
       }

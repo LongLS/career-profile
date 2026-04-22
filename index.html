@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/png" href="assets/favicon.png" />
   <title>Tech & Business Job Opportunities | Curated by Selena.Le</title>
   <meta name="description" content="Explore career opportunities at SotaTek. Find your perfect job in Engineering & Technology, Back Office, Sales & Marketing, and more." />
 
@@ -44,9 +45,9 @@
 
       <!-- Desktop Nav -->
       <nav class="primary-nav" id="primary-nav">
-        <a href="index.html" class="nav-item active" id="nav-list-jobs">List Jobs</a>
-        <a href="information.html" class="nav-item" id="nav-information">Information</a>
-        <a href="benefits.html" class="nav-item" id="nav-benefits">Benefits</a>
+        <a href="/" class="nav-item active" id="nav-list-jobs">List Jobs</a>
+        <a href="/information/" class="nav-item" id="nav-information">Information</a>
+        <a href="/benefits/" class="nav-item" id="nav-benefits">Benefits</a>
       </nav>
 
       <div class="header-actions">
@@ -57,9 +58,9 @@
     <!-- Mobile nav drawer -->
     <div class="mobile-nav-overlay" id="mobile-nav-overlay"></div>
     <nav class="mobile-nav" id="mobile-nav">
-      <a href="index.html" class="mobile-nav-item active">List Jobs</a>
-      <a href="information.html" class="mobile-nav-item">Information</a>
-      <a href="benefits.html" class="mobile-nav-item">Benefits</a>
+      <a href="/" class="mobile-nav-item active">List Jobs</a>
+      <a href="/information/" class="mobile-nav-item">Information</a>
+      <a href="/benefits/" class="mobile-nav-item">Benefits</a>
     </nav>
 
     <!-- ===== HERO SECTION ===== -->
@@ -269,7 +270,7 @@
                       : job.type === 'Part-Time'  ? 'badge-warning'
                       : 'badge-success';
       return `
-        <a class="job-card${job.is_hot ? ' job-card--hot' : ''}" id="job-card-${index + 1}" href="job-detail.html?id=${job.id}">
+        <a class="job-card${job.is_hot ? ' job-card--hot' : ''}" id="job-card-${index + 1}" href="/job-detail/?id=${job.id}">
           ${job.is_hot ? `<div class="job-hot-ribbon" aria-label="Hot job"><lottie-player class="job-hot-flame" src="assets/Fire.json" background="transparent" speed="1" loop autoplay></lottie-player><span>Hot</span></div>` : ''}
           <div class="job-heading">
             <div class="job-title-row">
