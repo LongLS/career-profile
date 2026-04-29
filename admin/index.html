@@ -411,13 +411,13 @@
             </div>
 
             <div class="form-group full">
-              <label for="f-location">Địa điểm *</label>
-              <select id="f-location" required>
-                <option value="">-- Chọn địa điểm --</option>
-                <option>Hanoi, Vietnam</option>
-                <option>Danang, Vietnam</option>
-                <option>Hochiminh, Vietnam</option>
-              </select>
+              <label for="f-location">
+                Địa điểm *
+                <span class="form-hint">— Chọn từ list hoặc nhập địa điểm mới</span>
+              </label>
+              <input type="text" id="f-location" list="locations-datalist" required
+                     placeholder="VD: Hanoi, Vietnam" autocomplete="off" />
+              <datalist id="locations-datalist"></datalist>
             </div>
 
             <div class="form-group full">
@@ -583,6 +583,18 @@
       }
       allDocs = data;
       renderTable(data);
+      refreshLocationsDatalist();
+    }
+
+    /* ── Refresh autocomplete list of locations ── */
+    function refreshLocationsDatalist() {
+      const dl = document.getElementById('locations-datalist');
+      if (!dl) return;
+      // Distinct locations from existing jobs + a few defaults so the list is never empty
+      const set = new Set(allDocs.map(d => d.location).filter(Boolean));
+      ['Hanoi, Vietnam', 'Danang, Vietnam', 'Hochiminh, Vietnam'].forEach(d => set.add(d));
+      const opts = [...set].sort((a, b) => a.localeCompare(b));
+      dl.innerHTML = opts.map(v => `<option value="${v.replace(/"/g, '&quot;')}">`).join('');
     }
 
     /* ── Test connection ── */

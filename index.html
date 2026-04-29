@@ -118,16 +118,7 @@
           <!-- Locations -->
           <div class="filter-modal-group">
             <h3 class="filter-modal-label">Locations</h3>
-            <div class="filter-modal-dropdown" id="modal-location-dropdown">
-              <span class="dropdown-text" id="modal-location-text">All Locations</span>
-              <img src="assets/7a62725035b11b931adf7e1d17fd23fde6f47ac2.svg" alt="Chevron Down" class="chevron-icon" />
-              <div class="dropdown-options" id="modal-location-options">
-                <div class="dropdown-option active" data-value="">All Locations</div>
-                <div class="dropdown-option" data-value="hanoi">Hanoi</div>
-                <div class="dropdown-option" data-value="danang">Danang</div>
-                <div class="dropdown-option" data-value="hochiminh">Hochiminh</div>
-              </div>
-            </div>
+            <div class="location-tags" id="modal-location-tags"></div>
           </div>
 
           <!-- Job Level -->
@@ -203,16 +194,7 @@
           <!-- Location Filter -->
           <div class="filter-group">
             <h3 class="filter-title">Locations</h3>
-            <div class="dropdown" id="location-dropdown">
-              <span class="dropdown-text" id="location-text">All Locations</span>
-              <img src="assets/7a62725035b11b931adf7e1d17fd23fde6f47ac2.svg" alt="Chevron Down" class="chevron-icon" />
-              <div class="dropdown-options" id="location-options">
-                <div class="dropdown-option active" data-value="">All Locations</div>
-                <div class="dropdown-option" data-value="hanoi">Hanoi</div>
-                <div class="dropdown-option" data-value="danang">Danang</div>
-                <div class="dropdown-option" data-value="hochiminh">Hochiminh</div>
-              </div>
-            </div>
+            <div class="location-tags" id="location-tags"></div>
           </div>
 
           <div class="filter-divider"></div>
@@ -302,7 +284,7 @@
     let allJobs = [];
     let selectedLevels     = new Set(); // empty = show all
     let selectedCategories = new Set(); // empty = show all
-    let selectedLocation   = '';        // empty = show all
+    let selectedLocations  = new Set(); // empty = show all (treated as "All Locations")
     let searchQuery        = '';        // empty = show all
 
     // Map category value → substring to match against job.company
@@ -312,6 +294,11 @@
       'operation':   'operation',
       'sales':       'sales',
     };
+
+    // Display label for a location string ("Hanoi, Vietnam" → "Hanoi")
+    function locationLabel(loc) {
+      return (loc || '').split(',')[0].trim();
+    }
 
     /* ---- Render filtered jobs ---- */
     function applyFilters() {
@@ -325,11 +312,9 @@
         );
       }
 
-      // Filter by location
-      if (selectedLocation) {
-        jobs = jobs.filter(job =>
-          (job.location || '').toLowerCase().includes(selectedLocation)
-        );
+      // Filter by location (multi-select)
+      if (selectedLocations.size > 0) {
+        jobs = jobs.filter(job => selectedLocations.has(job.location));
       }
 
       // Filter by level
@@ -410,56 +395,49 @@
       cb.addEventListener('change', () => handleCategoryChange(cb.value, cb.checked));
     });
 
-    /* ---- Location dropdown logic ---- */
-    const LOCATION_LABELS = { '': 'All Locations', hanoi: 'Hanoi', danang: 'Danang', hochiminh: 'Hochiminh' };
+    /* ---- Location tag filter (multi-select) ---- */
+    function renderLocationTags() {
+      // Collect distinct, non-empty locations from all jobs
+      const distinct = [...new Set(allJobs.map(j => j.location).filter(Boolean))];
+      distinct.sort((a, b) => a.localeCompare(b));
 
-    function setLocation(value) {
-      selectedLocation = value;
+      const buildTags = (containerId) => {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+        const isAllActive = selectedLocations.size === 0;
+        const tags = [
+          `<button type="button" class="location-tag${isAllActive ? ' active' : ''}" data-value="">All Locations</button>`,
+          ...distinct.map(loc =>
+            `<button type="button" class="location-tag${selectedLocations.has(loc) ? ' active' : ''}" data-value="${loc.replace(/"/g, '&quot;')}">${locationLabel(loc) || loc}</button>`
+          ),
+        ];
+        container.innerHTML = tags.join('');
+      };
+      buildTags('location-tags');
+      buildTags('modal-location-tags');
+    }
 
-      // Update text + active class for both dropdowns
-      [
-        { text: 'location-text',       options: 'location-options' },
-        { text: 'modal-location-text', options: 'modal-location-options' },
-      ].forEach(({ text, options }) => {
-        const textEl = document.getElementById(text);
-        if (textEl) textEl.textContent = LOCATION_LABELS[value];
-        document.querySelectorAll(`#${options} .dropdown-option`).forEach(opt => {
-          opt.classList.toggle('active', opt.dataset.value === value);
-        });
-      });
-
+    function handleLocationTagClick(value) {
+      if (!value) {
+        // "All Locations" → clear all
+        selectedLocations.clear();
+      } else if (selectedLocations.has(value)) {
+        selectedLocations.delete(value);
+      } else {
+        selectedLocations.add(value);
+      }
+      renderLocationTags();
       applyFilters();
     }
 
-    function setupLocationDropdown(toggleId, optionsId) {
-      const toggle  = document.getElementById(toggleId);
-      const options = document.getElementById(optionsId);
-      if (!toggle || !options) return;
-
-      toggle.addEventListener('click', (e) => {
-        e.stopPropagation();
-        // Close other open dropdowns first
-        document.querySelectorAll('.dropdown-options.open').forEach(el => {
-          if (el !== options) el.classList.remove('open');
-        });
-        options.classList.toggle('open');
+    // Event delegation for both sidebar + modal tag containers
+    ['location-tags', 'modal-location-tags'].forEach(id => {
+      const container = document.getElementById(id);
+      container?.addEventListener('click', (e) => {
+        const tag = e.target.closest('.location-tag');
+        if (!tag) return;
+        handleLocationTagClick(tag.dataset.value);
       });
-
-      options.querySelectorAll('.dropdown-option').forEach(opt => {
-        opt.addEventListener('click', (e) => {
-          e.stopPropagation();
-          setLocation(opt.dataset.value);
-          options.classList.remove('open');
-        });
-      });
-    }
-
-    setupLocationDropdown('location-dropdown',       'location-options');
-    setupLocationDropdown('modal-location-dropdown', 'modal-location-options');
-
-    // Close dropdowns when clicking outside
-    document.addEventListener('click', () => {
-      document.querySelectorAll('.dropdown-options.open').forEach(el => el.classList.remove('open'));
     });
 
     /* ---- Search input logic ---- */
@@ -500,6 +478,7 @@
       }
 
       allJobs = data;
+      renderLocationTags();
       applyFilters();
       console.log('[Supabase] Loaded', data.length, 'jobs');
     }
