@@ -341,14 +341,89 @@
     .toast.show    { opacity: 1; transform: translateY(0); }
     .toast.success { background: var(--success); }
     .toast.error   { background: var(--danger); }
+
+    /* ── Login overlay ── */
+    .login-overlay {
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(135deg, #eef3ff 0%, #f6f7fc 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      padding: 16px;
+    }
+    .login-card {
+      background: var(--white);
+      border-radius: 14px;
+      padding: 32px 28px;
+      width: 100%;
+      max-width: 360px;
+      box-shadow: 0 16px 48px rgba(3,106,229,.15);
+    }
+    .login-card h2 {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 4px;
+      text-align: center;
+    }
+    .login-card .login-sub {
+      font-size: 13px;
+      color: var(--gray-2);
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .login-card form { display: flex; flex-direction: column; gap: 12px; }
+    .login-card input { width: 100%; }
+    .login-card button { padding: 12px; font-size: 14px; }
+    .login-error {
+      font-size: 13px;
+      color: var(--danger);
+      text-align: center;
+      min-height: 18px;
+    }
+
+    /* Logout button in header */
+    .btn-logout {
+      background: transparent;
+      border: 1px solid var(--gray-3);
+      color: var(--gray-1);
+      padding: 6px 14px;
+      border-radius: 6px;
+      font-family: var(--font);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-left: 12px;
+      transition: background .2s, color .2s;
+    }
+    .btn-logout:hover { background: var(--gray-5); color: var(--dark); }
   </style>
 </head>
 <body>
 
+  <!-- ===== LOGIN OVERLAY ===== -->
+  <div class="login-overlay" id="login-overlay">
+    <div class="login-card">
+      <h2>Admin Login</h2>
+      <p class="login-sub">Đăng nhập để quản lý việc làm</p>
+      <form id="login-form" autocomplete="off">
+        <input type="text"     id="login-user" placeholder="Username" required autofocus />
+        <input type="password" id="login-pass" placeholder="Password" required />
+        <p class="login-error" id="login-error"></p>
+        <button type="submit" class="btn btn-primary">Đăng nhập</button>
+      </form>
+    </div>
+  </div>
+
   <!-- Header -->
   <header class="admin-header">
     <h1>Quản lý việc làm</h1>
-    <a href="/" target="_blank">← Xem trang chính</a>
+    <div>
+      <a href="/" target="_blank">← Xem trang chính</a>
+      <button class="btn-logout" id="btn-logout" type="button">Đăng xuất</button>
+    </div>
   </header>
 
   <div class="admin-body">
@@ -542,6 +617,40 @@
     const { createClient } = supabase;
     const db = createClient(SUPABASE_URL, SUPABASE_KEY);
 
+    /* ── Simple client-side auth (sessionStorage) ──
+       NOTE: client-only auth is not real security — anyone reading the
+       source can see the credentials. Use Supabase Auth or a server later. */
+    const ADMIN_USER = 'Admin';
+    const ADMIN_PASS = 'Nga@1234';
+    const AUTH_KEY   = 'admin_auth';
+
+    const loginOverlay = document.getElementById('login-overlay');
+    const loginForm    = document.getElementById('login-form');
+    const loginError   = document.getElementById('login-error');
+    const btnLogout    = document.getElementById('btn-logout');
+
+    function isAuthenticated() {
+      return sessionStorage.getItem(AUTH_KEY) === 'ok';
+    }
+    function showLogin()  { loginOverlay.style.display = 'flex'; document.body.style.overflow = 'hidden'; }
+    function hideLogin()  { loginOverlay.style.display = 'none'; document.body.style.overflow = ''; }
+    function logout()     { sessionStorage.removeItem(AUTH_KEY); location.reload(); }
+
+    loginForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const u = document.getElementById('login-user').value.trim();
+      const p = document.getElementById('login-pass').value;
+      if (u === ADMIN_USER && p === ADMIN_PASS) {
+        sessionStorage.setItem(AUTH_KEY, 'ok');
+        loginError.textContent = '';
+        hideLogin();
+        bootAdmin();
+      } else {
+        loginError.textContent = 'Sai username hoặc mật khẩu';
+      }
+    });
+    btnLogout.addEventListener('click', logout);
+
     /* ── Toast ── */
     function showToast(msg, type = 'success') {
       const t = document.getElementById('toast');
@@ -695,13 +804,26 @@
         loadJobs();
       }
     }
-    testConnection();
 
-    /* ── Real-time ── */
-    db.channel('admin-jobs')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'jobs' },
-        () => { if (!isReordering) loadJobs(); })
-      .subscribe();
+    /* ── Boot admin (only after login) ── */
+    let booted = false;
+    function bootAdmin() {
+      if (booted) return;
+      booted = true;
+      testConnection();
+      // Real-time
+      db.channel('admin-jobs')
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'jobs' },
+          () => { if (!isReordering) loadJobs(); })
+        .subscribe();
+    }
+
+    if (isAuthenticated()) {
+      hideLogin();
+      bootAdmin();
+    } else {
+      showLogin();
+    }
 
     /* ── Handle reorder ── */
     async function handleReorder() {
