@@ -111,6 +111,34 @@
     .btn-danger:hover { background: var(--danger-hover); }
     .btn-sm { padding: 6px 12px; font-size: 12px; border-radius: 6px; }
 
+    /* ── Stats dashboard ── */
+    .stats-card .card-title { margin-bottom: 16px; }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 12px;
+    }
+    .stat-box {
+      background: linear-gradient(135deg, #eef3ff, #f6f7fc);
+      border: 1px solid var(--gray-4);
+      border-radius: 10px;
+      padding: 16px 18px;
+    }
+    .stat-num {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--primary);
+      line-height: 1.2;
+    }
+    .stat-label {
+      font-size: 12px;
+      color: var(--gray-2);
+      margin-top: 4px;
+      text-transform: uppercase;
+      letter-spacing: .4px;
+    }
+    .td-views { color: var(--gray-1); font-weight: 600; }
+
     /* ── Jobs table ── */
     .table-wrap { overflow-x: auto; }
     .jobs-table { width: 100%; border-collapse: collapse; min-width: 700px; }
@@ -324,6 +352,30 @@
   </header>
 
   <div class="admin-body">
+
+    <!-- ===== STATS DASHBOARD ===== -->
+    <div class="card stats-card">
+      <div class="card-title">📊 Thống kê truy cập</div>
+      <div class="stats-grid">
+        <div class="stat-box">
+          <div class="stat-num" id="stat-total-views">—</div>
+          <div class="stat-label">Tổng lượt truy cập</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-num" id="stat-job-clicks">—</div>
+          <div class="stat-label">Lượt xem chi tiết job</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-num" id="stat-today">—</div>
+          <div class="stat-label">Truy cập hôm nay</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-num" id="stat-week">—</div>
+          <div class="stat-label">Truy cập 7 ngày</div>
+        </div>
+      </div>
+    </div>
+
     <div class="card">
       <div class="card-title">
         <div class="card-title-left">
@@ -528,6 +580,7 @@
             <td style="color:var(--gray-2)">${j.salary}</td>
             <td>${j.company}</td>
             <td style="color:var(--gray-2)">${j.location}</td>
+            <td class="td-views">${jobViewCounts.get(j.id) || 0}</td>
             <td>
               <div class="td-actions">
                 <button class="btn btn-secondary btn-sm" onclick="startEdit('${j.id}')">Sửa</button>
@@ -549,6 +602,7 @@
               <th>Lương</th>
               <th>Phòng ban</th>
               <th>Địa điểm</th>
+              <th style="width:80px">Lượt xem</th>
               <th>Thao tác</th>
             </tr>
           </thead>
@@ -568,6 +622,7 @@
     /* ── Load jobs ── */
     let allDocs = [];
     let isReordering = false;
+    let jobViewCounts = new Map(); // jobId → click count
 
     async function loadJobs() {
       const { data, error } = await db
@@ -582,8 +637,38 @@
         return;
       }
       allDocs = data;
+      // Load click counts before rendering so the view column has data
+      await loadAnalytics();
       renderTable(data);
       refreshLocationsDatalist();
+    }
+
+    /* ── Analytics: page views + per-job click counts ── */
+    async function loadAnalytics() {
+      const todayStart = new Date(); todayStart.setHours(0, 0, 0, 0);
+      const weekStart  = new Date(Date.now() - 7 * 24 * 3600 * 1000);
+
+      const [totalRes, todayRes, weekRes, jobTotalRes, jobRowsRes] = await Promise.all([
+        db.from('page_views').select('*', { count: 'exact', head: true }),
+        db.from('page_views').select('*', { count: 'exact', head: true }).gte('created_at', todayStart.toISOString()),
+        db.from('page_views').select('*', { count: 'exact', head: true }).gte('created_at', weekStart.toISOString()),
+        db.from('job_views').select('*', { count: 'exact', head: true }),
+        db.from('job_views').select('job_id'),
+      ]);
+
+      // Update stat cards
+      const fmt = n => (n ?? 0).toLocaleString('vi-VN');
+      document.getElementById('stat-total-views').textContent = fmt(totalRes.count);
+      document.getElementById('stat-today').textContent       = fmt(todayRes.count);
+      document.getElementById('stat-week').textContent        = fmt(weekRes.count);
+      document.getElementById('stat-job-clicks').textContent  = fmt(jobTotalRes.count);
+
+      // Build per-job click count map
+      jobViewCounts = new Map();
+      (jobRowsRes.data || []).forEach(r => {
+        if (!r.job_id) return;
+        jobViewCounts.set(r.job_id, (jobViewCounts.get(r.job_id) || 0) + 1);
+      });
     }
 
     /* ── Refresh autocomplete list of locations ── */

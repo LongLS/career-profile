@@ -245,6 +245,10 @@
     /* ---- Supabase init ---- */
     const { createClient } = supabase;
     const db = createClient(SUPABASE_URL, SUPABASE_KEY);
+  </script>
+  <script src="analytics.js"></script>
+  <script>
+    trackPageView('list-jobs');
 
     /* ---- Render job card ---- */
     function jobCardHTML(job, index) {

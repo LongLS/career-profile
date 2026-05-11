@@ -568,6 +568,10 @@
   <script>
     const { createClient } = supabase;
     const db = createClient(SUPABASE_URL, SUPABASE_KEY);
+  </script>
+  <script src="analytics.js"></script>
+  <script>
+    trackPageView('job-detail');
 
     /* ---- Hamburger menu ---- */
     const hamburger = document.getElementById('hamburger-btn');
@@ -646,6 +650,9 @@
         </p>`;
         return;
       }
+
+      // Track this job click for admin analytics
+      if (typeof trackJobView === 'function') trackJobView(data.id);
 
       // Topbar content + dynamic SEO/OG tags
       document.title = `${data.title} — SotaTek`;
