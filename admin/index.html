@@ -58,11 +58,88 @@
     }
     .admin-header a:hover { text-decoration: underline; }
 
-    /* ── Layout ── */
+    /* ── Layout: sidebar + main ── */
+    .admin-shell {
+      display: flex;
+      align-items: flex-start;
+      min-height: calc(100vh - 60px); /* header height */
+    }
+    .admin-sidebar {
+      width: 220px;
+      flex-shrink: 0;
+      background: var(--white);
+      border-right: 1px solid var(--gray-4);
+      padding: 24px 12px;
+      position: sticky;
+      top: 60px;
+      align-self: stretch;
+      min-height: calc(100vh - 60px);
+    }
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--gray-1);
+      cursor: pointer;
+      user-select: none;
+      transition: background .15s, color .15s;
+      text-decoration: none;
+    }
+    .nav-link:hover { background: var(--gray-5); color: var(--dark); }
+    .nav-link.active {
+      background: #e6efff;
+      color: var(--primary);
+    }
+    .nav-link + .nav-link { margin-top: 4px; }
+    .nav-link-icon { font-size: 16px; }
+
     .admin-body {
-      max-width: 1200px;
-      margin: 28px auto;
-      padding: 0 24px;
+      flex: 1;
+      min-width: 0;
+      padding: 28px 24px;
+      max-width: 1240px;
+    }
+
+    /* Toggle pages */
+    .admin-page { display: none; }
+    .admin-page.active { display: block; }
+
+    /* Per-job click table */
+    .stat-table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+    .stat-table th, .stat-table td {
+      text-align: left;
+      padding: 10px 12px;
+      font-size: 14px;
+      border-bottom: 1px solid var(--gray-4);
+    }
+    .stat-table th {
+      font-size: 12px;
+      text-transform: uppercase;
+      color: var(--gray-2);
+      letter-spacing: .4px;
+      background: var(--gray-5);
+    }
+    .stat-table th:first-child { border-radius: 6px 0 0 6px; }
+    .stat-table th:last-child  { border-radius: 0 6px 6px 0; text-align: right; }
+    .stat-table td:last-child  { text-align: right; font-weight: 600; color: var(--primary); }
+
+    @media (max-width: 768px) {
+      .admin-shell { flex-direction: column; }
+      .admin-sidebar {
+        position: static;
+        width: 100%;
+        min-height: auto;
+        padding: 12px;
+        display: flex;
+        gap: 8px;
+        border-right: none;
+        border-bottom: 1px solid var(--gray-4);
+      }
+      .nav-link + .nav-link { margin-top: 0; }
     }
 
     /* ── Card ── */
@@ -426,30 +503,65 @@
     </div>
   </header>
 
+  <div class="admin-shell">
+
+    <!-- ===== SIDEBAR NAV ===== -->
+    <aside class="admin-sidebar">
+      <a class="nav-link active" data-page="jobs">
+        <span class="nav-link-icon">📋</span>
+        <span>Danh sách việc làm</span>
+      </a>
+      <a class="nav-link" data-page="analytics">
+        <span class="nav-link-icon">📊</span>
+        <span>Thống kê truy cập</span>
+      </a>
+    </aside>
+
   <div class="admin-body">
 
-    <!-- ===== STATS DASHBOARD ===== -->
-    <div class="card stats-card">
-      <div class="card-title">📊 Thống kê truy cập</div>
-      <div class="stats-grid">
-        <div class="stat-box">
-          <div class="stat-num" id="stat-total-views">—</div>
-          <div class="stat-label">Tổng lượt truy cập</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-num" id="stat-job-clicks">—</div>
-          <div class="stat-label">Lượt xem chi tiết job</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-num" id="stat-today">—</div>
-          <div class="stat-label">Truy cập hôm nay</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-num" id="stat-week">—</div>
-          <div class="stat-label">Truy cập 7 ngày</div>
+    <!-- ===== ANALYTICS PAGE ===== -->
+    <section class="admin-page" id="page-analytics">
+      <div class="card stats-card">
+        <div class="card-title">📊 Thống kê truy cập</div>
+        <div class="stats-grid">
+          <div class="stat-box">
+            <div class="stat-num" id="stat-total-views">—</div>
+            <div class="stat-label">Tổng lượt truy cập</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-num" id="stat-job-clicks">—</div>
+            <div class="stat-label">Lượt xem chi tiết job</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-num" id="stat-today">—</div>
+            <div class="stat-label">Truy cập hôm nay</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-num" id="stat-week">—</div>
+            <div class="stat-label">Truy cập 7 ngày</div>
+          </div>
         </div>
       </div>
-    </div>
+
+      <div class="card" style="margin-top:24px">
+        <div class="card-title">Lượt xem theo trang</div>
+        <table class="stat-table">
+          <thead><tr><th>Trang</th><th>Lượt xem</th></tr></thead>
+          <tbody id="page-breakdown-body"><tr><td colspan="2" style="text-align:center;color:var(--gray-2)">Đang tải…</td></tr></tbody>
+        </table>
+      </div>
+
+      <div class="card" style="margin-top:24px">
+        <div class="card-title">Top job được xem nhiều nhất</div>
+        <table class="stat-table">
+          <thead><tr><th>Vị trí</th><th>Lượt click</th></tr></thead>
+          <tbody id="job-rank-body"><tr><td colspan="2" style="text-align:center;color:var(--gray-2)">Đang tải…</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ===== JOBS PAGE ===== -->
+    <section class="admin-page active" id="page-jobs">
 
     <div class="card">
       <div class="card-title">
@@ -478,7 +590,10 @@
         <p class="state-msg">Đang tải...</p>
       </div>
     </div>
-  </div>
+
+    </section><!-- /#page-jobs -->
+  </div><!-- /.admin-body -->
+  </div><!-- /.admin-shell -->
 
   <!-- ===== FORM MODAL ===== -->
   <div class="modal-overlay" id="form-modal">
@@ -757,12 +872,13 @@
       const todayStart = new Date(); todayStart.setHours(0, 0, 0, 0);
       const weekStart  = new Date(Date.now() - 7 * 24 * 3600 * 1000);
 
-      const [totalRes, todayRes, weekRes, jobTotalRes, jobRowsRes] = await Promise.all([
+      const [totalRes, todayRes, weekRes, jobTotalRes, jobRowsRes, pageRowsRes] = await Promise.all([
         db.from('page_views').select('*', { count: 'exact', head: true }),
         db.from('page_views').select('*', { count: 'exact', head: true }).gte('created_at', todayStart.toISOString()),
         db.from('page_views').select('*', { count: 'exact', head: true }).gte('created_at', weekStart.toISOString()),
         db.from('job_views').select('*', { count: 'exact', head: true }),
         db.from('job_views').select('job_id'),
+        db.from('page_views').select('page'),
       ]);
 
       // Update stat cards
@@ -778,7 +894,59 @@
         if (!r.job_id) return;
         jobViewCounts.set(r.job_id, (jobViewCounts.get(r.job_id) || 0) + 1);
       });
+
+      renderPageBreakdown(pageRowsRes.data || []);
+      renderJobRank();
     }
+
+    const PAGE_LABELS = {
+      'list-jobs':   'List Jobs',
+      'job-detail':  'Job Detail',
+      'information': 'Information',
+      'benefits':    'Benefits',
+    };
+
+    function renderPageBreakdown(rows) {
+      const tbody = document.getElementById('page-breakdown-body');
+      if (!tbody) return;
+      const counts = new Map();
+      rows.forEach(r => counts.set(r.page, (counts.get(r.page) || 0) + 1));
+      const sorted = [...counts.entries()].sort((a, b) => b[1] - a[1]);
+      if (!sorted.length) {
+        tbody.innerHTML = '<tr><td colspan="2" style="text-align:center;color:var(--gray-2)">Chưa có dữ liệu</td></tr>';
+        return;
+      }
+      tbody.innerHTML = sorted.map(([page, count]) =>
+        `<tr><td>${PAGE_LABELS[page] || page}</td><td>${count.toLocaleString('vi-VN')}</td></tr>`
+      ).join('');
+    }
+
+    function renderJobRank() {
+      const tbody = document.getElementById('job-rank-body');
+      if (!tbody) return;
+      const ranked = allDocs
+        .map(j => ({ id: j.id, title: j.title, count: jobViewCounts.get(j.id) || 0 }))
+        .sort((a, b) => b.count - a.count)
+        .slice(0, 20);
+      if (!ranked.length) {
+        tbody.innerHTML = '<tr><td colspan="2" style="text-align:center;color:var(--gray-2)">Chưa có dữ liệu</td></tr>';
+        return;
+      }
+      tbody.innerHTML = ranked.map(r =>
+        `<tr><td>${r.title}</td><td>${r.count.toLocaleString('vi-VN')}</td></tr>`
+      ).join('');
+    }
+
+    /* ── Sidebar nav: switch between pages ── */
+    document.querySelectorAll('.nav-link[data-page]').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const page = link.dataset.page;
+        document.querySelectorAll('.nav-link[data-page]').forEach(l => l.classList.toggle('active', l === link));
+        document.querySelectorAll('.admin-page').forEach(p => p.classList.toggle('active', p.id === `page-${page}`));
+        if (page === 'analytics') loadAnalytics();
+      });
+    });
 
     /* ── Refresh autocomplete list of locations ── */
     function refreshLocationsDatalist() {
